@@ -23,9 +23,9 @@
 <script src="index_files/bootstrap-3.3.5/shim/respond.min.js"></script>
 
 <!-- toc: table of contents -->
-<link href="_includes/libs/tocify-1.9.1/jquery.tocify.css" rel="stylesheet">
-<script src="_includes/libs/tocify-1.9.1/jquery-ui-1.9.2.custom.min.js"></script>
-<script src="_includes/libs/tocify-1.9.1/jquery.tocify.min.js"></script>
+<link href="includes/libs/tocify-1.9.1/jquery.tocify.css" rel="stylesheet">
+<script src="includes/libs/tocify-1.9.1/jquery-ui-1.9.2.custom.min.js"></script>
+<script src="includes/libs/tocify-1.9.1/jquery.tocify.min.js"></script>
 
 <!-- Custom Fonts for agency.css eco-data-science -->
 <link href='https://fonts.googleapis.com/css?family=Kaushan+Script' rel='stylesheet' type='text/css'>
@@ -62,10 +62,10 @@ if (window.hljs && document.readyState && document.readyState === "complete") {
 
 
 
-<link rel="stylesheet" href="_includes/libs/font-awesome-4.5.0/css/font-awesome.min.css" type="text/css" />
-<link rel="stylesheet" href="_includes/libs/octicons-3.3.0/octicons.css" type="text/css" />
-<link rel="stylesheet" href="_includes/styles/styles.css" type="text/css" />
-<link rel="stylesheet" href="_includes/styles/agency.css" type="text/css" />
+<link rel="stylesheet" href="includes/libs/font-awesome-4.5.0/css/font-awesome.min.css" type="text/css" />
+<link rel="stylesheet" href="includes/libs/octicons-3.3.0/octicons.css" type="text/css" />
+<link rel="stylesheet" href="includes/styles/styles.css" type="text/css" />
+<link rel="stylesheet" href="includes/styles/agency.css" type="text/css" />
 
 </head>
 
@@ -192,16 +192,16 @@ suppressPackageStartupMessages({
 <pre class="r"><code># Check package versions after Packages pane -&gt; Update
 devtools::session_info()</code></pre>
 <pre><code>## Session info --------------------------------------------------------------</code></pre>
-<pre><code>##  setting  value                       
+<pre><code>##  setting  value
 ##  version  R version 3.2.3 (2015-12-10)
-##  system   x86_64, darwin13.4.0        
-##  ui       X11                         
-##  language (EN)                        
-##  collate  en_US.UTF-8                 
-##  tz       America/Los_Angeles         
+##  system   x86_64, darwin13.4.0
+##  ui       X11
+##  language (EN)
+##  collate  en_US.UTF-8
+##  tz       America/Los_Angeles
 ##  date     2016-03-11</code></pre>
 <pre><code>## Packages ------------------------------------------------------------------</code></pre>
-<pre><code>##  package    * version date       source        
+<pre><code>##  package    * version date       source
 ##  assertthat   0.1     2013-12-06 CRAN (R 3.2.0)
 ##  broom      * 0.4.0   2015-11-30 CRAN (R 3.2.3)
 ##  colorspace   1.2-6   2015-03-11 CRAN (R 3.2.0)
@@ -255,182 +255,182 @@ devtools::session_info()</code></pre>
 <p>Although technically two separate packages, <strong>dplyr</strong> and <strong>tidyr</strong> were designed to work together and can basically be thought of as a single package. They are designed to work with data frames as is, but it is generally a good idea to convert your data to table data using the <code>read_csv()</code> or <code>tbl_df()</code> functions, particularly when working with large datasets.</p>
 <pre class="r"><code>## Comparing read.csv with read_csv
 # Read in FAO data
-fao   &lt;- read.csv(file = &#39;data/FAO_1950to2012_111914.csv&#39;, stringsAsFactors = F) 
+fao   &lt;- read.csv(file = &#39;data/FAO_1950to2012_111914.csv&#39;, stringsAsFactors = F)
 summary(fao)</code></pre>
 <pre><code>##  Country..Country.  Species..ASFIS.species. Species..ISSCAAP.group.
-##  Length:17692       Length:17692            Min.   :11.00          
-##  Class :character   Class :character        1st Qu.:33.00          
-##  Mode  :character   Mode  :character        Median :36.00          
-##                                             Mean   :37.38          
-##                                             3rd Qu.:38.00          
-##                                             Max.   :77.00          
+##  Length:17692       Length:17692            Min.   :11.00
+##  Class :character   Class :character        1st Qu.:33.00
+##  Mode  :character   Mode  :character        Median :36.00
+##                                             Mean   :37.38
+##                                             3rd Qu.:38.00
+##                                             Max.   :77.00
 ##  Species..ISSCAAP.group..1 Species..ASFIS.species..1
-##  Length:17692              Length:17692             
-##  Class :character          Class :character         
-##  Mode  :character          Mode  :character         
-##                                                     
-##                                                     
-##                                                     
+##  Length:17692              Length:17692
+##  Class :character          Class :character
+##  Mode  :character          Mode  :character
+##
+##
+##
 ##  Species..ASFIS.species..2 Fishing.area..FAO.major.fishing.area.
-##  Length:17692              Min.   :18.00                        
-##  Class :character          1st Qu.:31.00                        
-##  Mode  :character          Median :37.00                        
-##                            Mean   :45.34                        
-##                            3rd Qu.:57.00                        
-##                            Max.   :88.00                        
-##  Measure..Measure.     X1950              X1951          
-##  Length:17692       Length:17692       Length:17692      
-##  Class :character   Class :character   Class :character  
-##  Mode  :character   Mode  :character   Mode  :character  
-##                                                          
-##                                                          
-##                                                          
-##     X1952              X1953              X1954          
-##  Length:17692       Length:17692       Length:17692      
-##  Class :character   Class :character   Class :character  
-##  Mode  :character   Mode  :character   Mode  :character  
-##                                                          
-##                                                          
-##                                                          
-##     X1955              X1956              X1957          
-##  Length:17692       Length:17692       Length:17692      
-##  Class :character   Class :character   Class :character  
-##  Mode  :character   Mode  :character   Mode  :character  
-##                                                          
-##                                                          
-##                                                          
-##     X1958              X1959              X1960          
-##  Length:17692       Length:17692       Length:17692      
-##  Class :character   Class :character   Class :character  
-##  Mode  :character   Mode  :character   Mode  :character  
-##                                                          
-##                                                          
-##                                                          
-##     X1961              X1962              X1963          
-##  Length:17692       Length:17692       Length:17692      
-##  Class :character   Class :character   Class :character  
-##  Mode  :character   Mode  :character   Mode  :character  
-##                                                          
-##                                                          
-##                                                          
-##     X1964              X1965              X1966          
-##  Length:17692       Length:17692       Length:17692      
-##  Class :character   Class :character   Class :character  
-##  Mode  :character   Mode  :character   Mode  :character  
-##                                                          
-##                                                          
-##                                                          
-##     X1967              X1968              X1969          
-##  Length:17692       Length:17692       Length:17692      
-##  Class :character   Class :character   Class :character  
-##  Mode  :character   Mode  :character   Mode  :character  
-##                                                          
-##                                                          
-##                                                          
-##     X1970              X1971              X1972          
-##  Length:17692       Length:17692       Length:17692      
-##  Class :character   Class :character   Class :character  
-##  Mode  :character   Mode  :character   Mode  :character  
-##                                                          
-##                                                          
-##                                                          
-##     X1973              X1974              X1975          
-##  Length:17692       Length:17692       Length:17692      
-##  Class :character   Class :character   Class :character  
-##  Mode  :character   Mode  :character   Mode  :character  
-##                                                          
-##                                                          
-##                                                          
-##     X1976              X1977              X1978          
-##  Length:17692       Length:17692       Length:17692      
-##  Class :character   Class :character   Class :character  
-##  Mode  :character   Mode  :character   Mode  :character  
-##                                                          
-##                                                          
-##                                                          
-##     X1979              X1980              X1981          
-##  Length:17692       Length:17692       Length:17692      
-##  Class :character   Class :character   Class :character  
-##  Mode  :character   Mode  :character   Mode  :character  
-##                                                          
-##                                                          
-##                                                          
-##     X1982              X1983              X1984          
-##  Length:17692       Length:17692       Length:17692      
-##  Class :character   Class :character   Class :character  
-##  Mode  :character   Mode  :character   Mode  :character  
-##                                                          
-##                                                          
-##                                                          
-##     X1985              X1986              X1987          
-##  Length:17692       Length:17692       Length:17692      
-##  Class :character   Class :character   Class :character  
-##  Mode  :character   Mode  :character   Mode  :character  
-##                                                          
-##                                                          
-##                                                          
-##     X1988              X1989              X1990          
-##  Length:17692       Length:17692       Length:17692      
-##  Class :character   Class :character   Class :character  
-##  Mode  :character   Mode  :character   Mode  :character  
-##                                                          
-##                                                          
-##                                                          
-##     X1991              X1992              X1993          
-##  Length:17692       Length:17692       Length:17692      
-##  Class :character   Class :character   Class :character  
-##  Mode  :character   Mode  :character   Mode  :character  
-##                                                          
-##                                                          
-##                                                          
-##     X1994              X1995              X1996          
-##  Length:17692       Length:17692       Length:17692      
-##  Class :character   Class :character   Class :character  
-##  Mode  :character   Mode  :character   Mode  :character  
-##                                                          
-##                                                          
-##                                                          
-##     X1997              X1998              X1999          
-##  Length:17692       Length:17692       Length:17692      
-##  Class :character   Class :character   Class :character  
-##  Mode  :character   Mode  :character   Mode  :character  
-##                                                          
-##                                                          
-##                                                          
-##     X2000              X2001              X2002          
-##  Length:17692       Length:17692       Length:17692      
-##  Class :character   Class :character   Class :character  
-##  Mode  :character   Mode  :character   Mode  :character  
-##                                                          
-##                                                          
-##                                                          
-##     X2003              X2004              X2005          
-##  Length:17692       Length:17692       Length:17692      
-##  Class :character   Class :character   Class :character  
-##  Mode  :character   Mode  :character   Mode  :character  
-##                                                          
-##                                                          
-##                                                          
-##     X2006              X2007              X2008          
-##  Length:17692       Length:17692       Length:17692      
-##  Class :character   Class :character   Class :character  
-##  Mode  :character   Mode  :character   Mode  :character  
-##                                                          
-##                                                          
-##                                                          
-##     X2009              X2010              X2011          
-##  Length:17692       Length:17692       Length:17692      
-##  Class :character   Class :character   Class :character  
-##  Mode  :character   Mode  :character   Mode  :character  
-##                                                          
-##                                                          
-##                                                          
-##     X2012          
-##  Length:17692      
-##  Class :character  
-##  Mode  :character  
-##                    
-##                    
+##  Length:17692              Min.   :18.00
+##  Class :character          1st Qu.:31.00
+##  Mode  :character          Median :37.00
+##                            Mean   :45.34
+##                            3rd Qu.:57.00
+##                            Max.   :88.00
+##  Measure..Measure.     X1950              X1951
+##  Length:17692       Length:17692       Length:17692
+##  Class :character   Class :character   Class :character
+##  Mode  :character   Mode  :character   Mode  :character
+##
+##
+##
+##     X1952              X1953              X1954
+##  Length:17692       Length:17692       Length:17692
+##  Class :character   Class :character   Class :character
+##  Mode  :character   Mode  :character   Mode  :character
+##
+##
+##
+##     X1955              X1956              X1957
+##  Length:17692       Length:17692       Length:17692
+##  Class :character   Class :character   Class :character
+##  Mode  :character   Mode  :character   Mode  :character
+##
+##
+##
+##     X1958              X1959              X1960
+##  Length:17692       Length:17692       Length:17692
+##  Class :character   Class :character   Class :character
+##  Mode  :character   Mode  :character   Mode  :character
+##
+##
+##
+##     X1961              X1962              X1963
+##  Length:17692       Length:17692       Length:17692
+##  Class :character   Class :character   Class :character
+##  Mode  :character   Mode  :character   Mode  :character
+##
+##
+##
+##     X1964              X1965              X1966
+##  Length:17692       Length:17692       Length:17692
+##  Class :character   Class :character   Class :character
+##  Mode  :character   Mode  :character   Mode  :character
+##
+##
+##
+##     X1967              X1968              X1969
+##  Length:17692       Length:17692       Length:17692
+##  Class :character   Class :character   Class :character
+##  Mode  :character   Mode  :character   Mode  :character
+##
+##
+##
+##     X1970              X1971              X1972
+##  Length:17692       Length:17692       Length:17692
+##  Class :character   Class :character   Class :character
+##  Mode  :character   Mode  :character   Mode  :character
+##
+##
+##
+##     X1973              X1974              X1975
+##  Length:17692       Length:17692       Length:17692
+##  Class :character   Class :character   Class :character
+##  Mode  :character   Mode  :character   Mode  :character
+##
+##
+##
+##     X1976              X1977              X1978
+##  Length:17692       Length:17692       Length:17692
+##  Class :character   Class :character   Class :character
+##  Mode  :character   Mode  :character   Mode  :character
+##
+##
+##
+##     X1979              X1980              X1981
+##  Length:17692       Length:17692       Length:17692
+##  Class :character   Class :character   Class :character
+##  Mode  :character   Mode  :character   Mode  :character
+##
+##
+##
+##     X1982              X1983              X1984
+##  Length:17692       Length:17692       Length:17692
+##  Class :character   Class :character   Class :character
+##  Mode  :character   Mode  :character   Mode  :character
+##
+##
+##
+##     X1985              X1986              X1987
+##  Length:17692       Length:17692       Length:17692
+##  Class :character   Class :character   Class :character
+##  Mode  :character   Mode  :character   Mode  :character
+##
+##
+##
+##     X1988              X1989              X1990
+##  Length:17692       Length:17692       Length:17692
+##  Class :character   Class :character   Class :character
+##  Mode  :character   Mode  :character   Mode  :character
+##
+##
+##
+##     X1991              X1992              X1993
+##  Length:17692       Length:17692       Length:17692
+##  Class :character   Class :character   Class :character
+##  Mode  :character   Mode  :character   Mode  :character
+##
+##
+##
+##     X1994              X1995              X1996
+##  Length:17692       Length:17692       Length:17692
+##  Class :character   Class :character   Class :character
+##  Mode  :character   Mode  :character   Mode  :character
+##
+##
+##
+##     X1997              X1998              X1999
+##  Length:17692       Length:17692       Length:17692
+##  Class :character   Class :character   Class :character
+##  Mode  :character   Mode  :character   Mode  :character
+##
+##
+##
+##     X2000              X2001              X2002
+##  Length:17692       Length:17692       Length:17692
+##  Class :character   Class :character   Class :character
+##  Mode  :character   Mode  :character   Mode  :character
+##
+##
+##
+##     X2003              X2004              X2005
+##  Length:17692       Length:17692       Length:17692
+##  Class :character   Class :character   Class :character
+##  Mode  :character   Mode  :character   Mode  :character
+##
+##
+##
+##     X2006              X2007              X2008
+##  Length:17692       Length:17692       Length:17692
+##  Class :character   Class :character   Class :character
+##  Mode  :character   Mode  :character   Mode  :character
+##
+##
+##
+##     X2009              X2010              X2011
+##  Length:17692       Length:17692       Length:17692
+##  Class :character   Class :character   Class :character
+##  Mode  :character   Mode  :character   Mode  :character
+##
+##
+##
+##     X2012
+##  Length:17692
+##  Class :character
+##  Mode  :character
+##
+##
 ## </code></pre>
 <pre class="r"><code>head(fao)</code></pre>
 <pre><code>##   Country..Country.      Species..ASFIS.species. Species..ISSCAAP.group.
@@ -497,10 +497,10 @@ summary(fao)</code></pre>
 ## 5     -     -     -     -     -     -
 ## 6     -     -     -     -     -     -</code></pre>
 <pre class="r"><code># vs using read_csv
-fao   &lt;- read_csv(file = &#39;data/FAO_1950to2012_111914.csv&#39;) 
+fao   &lt;- read_csv(file = &#39;data/FAO_1950to2012_111914.csv&#39;)
 fao</code></pre>
 <pre><code>## Source: local data frame [17,692 x 71]
-## 
+##
 ##    Country (Country)      Species (ASFIS species) Species (ISSCAAP group)
 ##                (chr)                        (chr)                   (int)
 ## 1            Albania Angelsharks, sand devils nei                      38
@@ -536,7 +536,7 @@ names(fao) = make.names(names(fao), unique=T) # since original column names have
 # fao # all entries are printed in your console
 head(fao) # top five entries are printed in your console, columns wrap and can be difficult to follow if working with many variables</code></pre>
 <pre><code>## Source: local data frame [6 x 71]
-## 
+##
 ##   Country..Country.      Species..ASFIS.species. Species..ISSCAAP.group.
 ##               (chr)                        (chr)                   (int)
 ## 1           Albania Angelsharks, sand devils nei                      38
@@ -562,185 +562,185 @@ head(fao) # top five entries are printed in your console, columns wrap and can b
 ##   (chr), X2011 (chr), X2012 (chr)</code></pre>
 <pre class="r"><code>summary(fao)</code></pre>
 <pre><code>##  Country..Country.  Species..ASFIS.species. Species..ISSCAAP.group.
-##  Length:17692       Length:17692            Min.   :11.00          
-##  Class :character   Class :character        1st Qu.:33.00          
-##  Mode  :character   Mode  :character        Median :36.00          
-##                                             Mean   :37.38          
-##                                             3rd Qu.:38.00          
-##                                             Max.   :77.00          
+##  Length:17692       Length:17692            Min.   :11.00
+##  Class :character   Class :character        1st Qu.:33.00
+##  Mode  :character   Mode  :character        Median :36.00
+##                                             Mean   :37.38
+##                                             3rd Qu.:38.00
+##                                             Max.   :77.00
 ##  Species..ISSCAAP.group..1 Species..ASFIS.species..1
-##  Length:17692              Length:17692             
-##  Class :character          Class :character         
-##  Mode  :character          Mode  :character         
-##                                                     
-##                                                     
-##                                                     
+##  Length:17692              Length:17692
+##  Class :character          Class :character
+##  Mode  :character          Mode  :character
+##
+##
+##
 ##  Species..ASFIS.species..2 Fishing.area..FAO.major.fishing.area.
-##  Length:17692              Min.   :18.00                        
-##  Class :character          1st Qu.:31.00                        
-##  Mode  :character          Median :37.00                        
-##                            Mean   :45.34                        
-##                            3rd Qu.:57.00                        
-##                            Max.   :88.00                        
-##  Measure..Measure.     X1950              X1951          
-##  Length:17692       Length:17692       Length:17692      
-##  Class :character   Class :character   Class :character  
-##  Mode  :character   Mode  :character   Mode  :character  
-##                                                          
-##                                                          
-##                                                          
-##     X1952              X1953              X1954          
-##  Length:17692       Length:17692       Length:17692      
-##  Class :character   Class :character   Class :character  
-##  Mode  :character   Mode  :character   Mode  :character  
-##                                                          
-##                                                          
-##                                                          
-##     X1955              X1956              X1957          
-##  Length:17692       Length:17692       Length:17692      
-##  Class :character   Class :character   Class :character  
-##  Mode  :character   Mode  :character   Mode  :character  
-##                                                          
-##                                                          
-##                                                          
-##     X1958              X1959              X1960          
-##  Length:17692       Length:17692       Length:17692      
-##  Class :character   Class :character   Class :character  
-##  Mode  :character   Mode  :character   Mode  :character  
-##                                                          
-##                                                          
-##                                                          
-##     X1961              X1962              X1963          
-##  Length:17692       Length:17692       Length:17692      
-##  Class :character   Class :character   Class :character  
-##  Mode  :character   Mode  :character   Mode  :character  
-##                                                          
-##                                                          
-##                                                          
-##     X1964              X1965              X1966          
-##  Length:17692       Length:17692       Length:17692      
-##  Class :character   Class :character   Class :character  
-##  Mode  :character   Mode  :character   Mode  :character  
-##                                                          
-##                                                          
-##                                                          
-##     X1967              X1968              X1969          
-##  Length:17692       Length:17692       Length:17692      
-##  Class :character   Class :character   Class :character  
-##  Mode  :character   Mode  :character   Mode  :character  
-##                                                          
-##                                                          
-##                                                          
-##     X1970              X1971              X1972          
-##  Length:17692       Length:17692       Length:17692      
-##  Class :character   Class :character   Class :character  
-##  Mode  :character   Mode  :character   Mode  :character  
-##                                                          
-##                                                          
-##                                                          
-##     X1973              X1974              X1975          
-##  Length:17692       Length:17692       Length:17692      
-##  Class :character   Class :character   Class :character  
-##  Mode  :character   Mode  :character   Mode  :character  
-##                                                          
-##                                                          
-##                                                          
-##     X1976              X1977              X1978          
-##  Length:17692       Length:17692       Length:17692      
-##  Class :character   Class :character   Class :character  
-##  Mode  :character   Mode  :character   Mode  :character  
-##                                                          
-##                                                          
-##                                                          
-##     X1979              X1980              X1981          
-##  Length:17692       Length:17692       Length:17692      
-##  Class :character   Class :character   Class :character  
-##  Mode  :character   Mode  :character   Mode  :character  
-##                                                          
-##                                                          
-##                                                          
-##     X1982              X1983              X1984          
-##  Length:17692       Length:17692       Length:17692      
-##  Class :character   Class :character   Class :character  
-##  Mode  :character   Mode  :character   Mode  :character  
-##                                                          
-##                                                          
-##                                                          
-##     X1985              X1986              X1987          
-##  Length:17692       Length:17692       Length:17692      
-##  Class :character   Class :character   Class :character  
-##  Mode  :character   Mode  :character   Mode  :character  
-##                                                          
-##                                                          
-##                                                          
-##     X1988              X1989              X1990          
-##  Length:17692       Length:17692       Length:17692      
-##  Class :character   Class :character   Class :character  
-##  Mode  :character   Mode  :character   Mode  :character  
-##                                                          
-##                                                          
-##                                                          
-##     X1991              X1992              X1993          
-##  Length:17692       Length:17692       Length:17692      
-##  Class :character   Class :character   Class :character  
-##  Mode  :character   Mode  :character   Mode  :character  
-##                                                          
-##                                                          
-##                                                          
-##     X1994              X1995              X1996          
-##  Length:17692       Length:17692       Length:17692      
-##  Class :character   Class :character   Class :character  
-##  Mode  :character   Mode  :character   Mode  :character  
-##                                                          
-##                                                          
-##                                                          
-##     X1997              X1998              X1999          
-##  Length:17692       Length:17692       Length:17692      
-##  Class :character   Class :character   Class :character  
-##  Mode  :character   Mode  :character   Mode  :character  
-##                                                          
-##                                                          
-##                                                          
-##     X2000              X2001              X2002          
-##  Length:17692       Length:17692       Length:17692      
-##  Class :character   Class :character   Class :character  
-##  Mode  :character   Mode  :character   Mode  :character  
-##                                                          
-##                                                          
-##                                                          
-##     X2003              X2004              X2005          
-##  Length:17692       Length:17692       Length:17692      
-##  Class :character   Class :character   Class :character  
-##  Mode  :character   Mode  :character   Mode  :character  
-##                                                          
-##                                                          
-##                                                          
-##     X2006              X2007              X2008          
-##  Length:17692       Length:17692       Length:17692      
-##  Class :character   Class :character   Class :character  
-##  Mode  :character   Mode  :character   Mode  :character  
-##                                                          
-##                                                          
-##                                                          
-##     X2009              X2010              X2011          
-##  Length:17692       Length:17692       Length:17692      
-##  Class :character   Class :character   Class :character  
-##  Mode  :character   Mode  :character   Mode  :character  
-##                                                          
-##                                                          
-##                                                          
-##     X2012          
-##  Length:17692      
-##  Class :character  
-##  Mode  :character  
-##                    
-##                    
+##  Length:17692              Min.   :18.00
+##  Class :character          1st Qu.:31.00
+##  Mode  :character          Median :37.00
+##                            Mean   :45.34
+##                            3rd Qu.:57.00
+##                            Max.   :88.00
+##  Measure..Measure.     X1950              X1951
+##  Length:17692       Length:17692       Length:17692
+##  Class :character   Class :character   Class :character
+##  Mode  :character   Mode  :character   Mode  :character
+##
+##
+##
+##     X1952              X1953              X1954
+##  Length:17692       Length:17692       Length:17692
+##  Class :character   Class :character   Class :character
+##  Mode  :character   Mode  :character   Mode  :character
+##
+##
+##
+##     X1955              X1956              X1957
+##  Length:17692       Length:17692       Length:17692
+##  Class :character   Class :character   Class :character
+##  Mode  :character   Mode  :character   Mode  :character
+##
+##
+##
+##     X1958              X1959              X1960
+##  Length:17692       Length:17692       Length:17692
+##  Class :character   Class :character   Class :character
+##  Mode  :character   Mode  :character   Mode  :character
+##
+##
+##
+##     X1961              X1962              X1963
+##  Length:17692       Length:17692       Length:17692
+##  Class :character   Class :character   Class :character
+##  Mode  :character   Mode  :character   Mode  :character
+##
+##
+##
+##     X1964              X1965              X1966
+##  Length:17692       Length:17692       Length:17692
+##  Class :character   Class :character   Class :character
+##  Mode  :character   Mode  :character   Mode  :character
+##
+##
+##
+##     X1967              X1968              X1969
+##  Length:17692       Length:17692       Length:17692
+##  Class :character   Class :character   Class :character
+##  Mode  :character   Mode  :character   Mode  :character
+##
+##
+##
+##     X1970              X1971              X1972
+##  Length:17692       Length:17692       Length:17692
+##  Class :character   Class :character   Class :character
+##  Mode  :character   Mode  :character   Mode  :character
+##
+##
+##
+##     X1973              X1974              X1975
+##  Length:17692       Length:17692       Length:17692
+##  Class :character   Class :character   Class :character
+##  Mode  :character   Mode  :character   Mode  :character
+##
+##
+##
+##     X1976              X1977              X1978
+##  Length:17692       Length:17692       Length:17692
+##  Class :character   Class :character   Class :character
+##  Mode  :character   Mode  :character   Mode  :character
+##
+##
+##
+##     X1979              X1980              X1981
+##  Length:17692       Length:17692       Length:17692
+##  Class :character   Class :character   Class :character
+##  Mode  :character   Mode  :character   Mode  :character
+##
+##
+##
+##     X1982              X1983              X1984
+##  Length:17692       Length:17692       Length:17692
+##  Class :character   Class :character   Class :character
+##  Mode  :character   Mode  :character   Mode  :character
+##
+##
+##
+##     X1985              X1986              X1987
+##  Length:17692       Length:17692       Length:17692
+##  Class :character   Class :character   Class :character
+##  Mode  :character   Mode  :character   Mode  :character
+##
+##
+##
+##     X1988              X1989              X1990
+##  Length:17692       Length:17692       Length:17692
+##  Class :character   Class :character   Class :character
+##  Mode  :character   Mode  :character   Mode  :character
+##
+##
+##
+##     X1991              X1992              X1993
+##  Length:17692       Length:17692       Length:17692
+##  Class :character   Class :character   Class :character
+##  Mode  :character   Mode  :character   Mode  :character
+##
+##
+##
+##     X1994              X1995              X1996
+##  Length:17692       Length:17692       Length:17692
+##  Class :character   Class :character   Class :character
+##  Mode  :character   Mode  :character   Mode  :character
+##
+##
+##
+##     X1997              X1998              X1999
+##  Length:17692       Length:17692       Length:17692
+##  Class :character   Class :character   Class :character
+##  Mode  :character   Mode  :character   Mode  :character
+##
+##
+##
+##     X2000              X2001              X2002
+##  Length:17692       Length:17692       Length:17692
+##  Class :character   Class :character   Class :character
+##  Mode  :character   Mode  :character   Mode  :character
+##
+##
+##
+##     X2003              X2004              X2005
+##  Length:17692       Length:17692       Length:17692
+##  Class :character   Class :character   Class :character
+##  Mode  :character   Mode  :character   Mode  :character
+##
+##
+##
+##     X2006              X2007              X2008
+##  Length:17692       Length:17692       Length:17692
+##  Class :character   Class :character   Class :character
+##  Mode  :character   Mode  :character   Mode  :character
+##
+##
+##
+##     X2009              X2010              X2011
+##  Length:17692       Length:17692       Length:17692
+##  Class :character   Class :character   Class :character
+##  Mode  :character   Mode  :character   Mode  :character
+##
+##
+##
+##     X2012
+##  Length:17692
+##  Class :character
+##  Mode  :character
+##
+##
 ## </code></pre>
 <pre class="r"><code>## With dplyr
 fao&lt;-tbl_df(fao) # convert to table data
 fao # now top 10 rows are shown along with data type of each variable. Variables that do not fit in console window are shown below.</code></pre>
 <pre><code>## Source: local data frame [17,692 x 71]
-## 
+##
 ##    Country..Country.      Species..ASFIS.species. Species..ISSCAAP.group.
 ##                (chr)                        (chr)                   (int)
 ## 1            Albania Angelsharks, sand devils nei                      38
@@ -845,179 +845,179 @@ fao # now top 10 rows are shown along with data type of each variable. Variables
 ## $ X2012                                 (chr) &quot;5&quot;, &quot;5&quot;, &quot;...&quot;, &quot;...&quot;, ...</code></pre>
 <pre class="r"><code>summary(fao)</code></pre>
 <pre><code>##  Country..Country.  Species..ASFIS.species. Species..ISSCAAP.group.
-##  Length:17692       Length:17692            Min.   :11.00          
-##  Class :character   Class :character        1st Qu.:33.00          
-##  Mode  :character   Mode  :character        Median :36.00          
-##                                             Mean   :37.38          
-##                                             3rd Qu.:38.00          
-##                                             Max.   :77.00          
+##  Length:17692       Length:17692            Min.   :11.00
+##  Class :character   Class :character        1st Qu.:33.00
+##  Mode  :character   Mode  :character        Median :36.00
+##                                             Mean   :37.38
+##                                             3rd Qu.:38.00
+##                                             Max.   :77.00
 ##  Species..ISSCAAP.group..1 Species..ASFIS.species..1
-##  Length:17692              Length:17692             
-##  Class :character          Class :character         
-##  Mode  :character          Mode  :character         
-##                                                     
-##                                                     
-##                                                     
+##  Length:17692              Length:17692
+##  Class :character          Class :character
+##  Mode  :character          Mode  :character
+##
+##
+##
 ##  Species..ASFIS.species..2 Fishing.area..FAO.major.fishing.area.
-##  Length:17692              Min.   :18.00                        
-##  Class :character          1st Qu.:31.00                        
-##  Mode  :character          Median :37.00                        
-##                            Mean   :45.34                        
-##                            3rd Qu.:57.00                        
-##                            Max.   :88.00                        
-##  Measure..Measure.     X1950              X1951          
-##  Length:17692       Length:17692       Length:17692      
-##  Class :character   Class :character   Class :character  
-##  Mode  :character   Mode  :character   Mode  :character  
-##                                                          
-##                                                          
-##                                                          
-##     X1952              X1953              X1954          
-##  Length:17692       Length:17692       Length:17692      
-##  Class :character   Class :character   Class :character  
-##  Mode  :character   Mode  :character   Mode  :character  
-##                                                          
-##                                                          
-##                                                          
-##     X1955              X1956              X1957          
-##  Length:17692       Length:17692       Length:17692      
-##  Class :character   Class :character   Class :character  
-##  Mode  :character   Mode  :character   Mode  :character  
-##                                                          
-##                                                          
-##                                                          
-##     X1958              X1959              X1960          
-##  Length:17692       Length:17692       Length:17692      
-##  Class :character   Class :character   Class :character  
-##  Mode  :character   Mode  :character   Mode  :character  
-##                                                          
-##                                                          
-##                                                          
-##     X1961              X1962              X1963          
-##  Length:17692       Length:17692       Length:17692      
-##  Class :character   Class :character   Class :character  
-##  Mode  :character   Mode  :character   Mode  :character  
-##                                                          
-##                                                          
-##                                                          
-##     X1964              X1965              X1966          
-##  Length:17692       Length:17692       Length:17692      
-##  Class :character   Class :character   Class :character  
-##  Mode  :character   Mode  :character   Mode  :character  
-##                                                          
-##                                                          
-##                                                          
-##     X1967              X1968              X1969          
-##  Length:17692       Length:17692       Length:17692      
-##  Class :character   Class :character   Class :character  
-##  Mode  :character   Mode  :character   Mode  :character  
-##                                                          
-##                                                          
-##                                                          
-##     X1970              X1971              X1972          
-##  Length:17692       Length:17692       Length:17692      
-##  Class :character   Class :character   Class :character  
-##  Mode  :character   Mode  :character   Mode  :character  
-##                                                          
-##                                                          
-##                                                          
-##     X1973              X1974              X1975          
-##  Length:17692       Length:17692       Length:17692      
-##  Class :character   Class :character   Class :character  
-##  Mode  :character   Mode  :character   Mode  :character  
-##                                                          
-##                                                          
-##                                                          
-##     X1976              X1977              X1978          
-##  Length:17692       Length:17692       Length:17692      
-##  Class :character   Class :character   Class :character  
-##  Mode  :character   Mode  :character   Mode  :character  
-##                                                          
-##                                                          
-##                                                          
-##     X1979              X1980              X1981          
-##  Length:17692       Length:17692       Length:17692      
-##  Class :character   Class :character   Class :character  
-##  Mode  :character   Mode  :character   Mode  :character  
-##                                                          
-##                                                          
-##                                                          
-##     X1982              X1983              X1984          
-##  Length:17692       Length:17692       Length:17692      
-##  Class :character   Class :character   Class :character  
-##  Mode  :character   Mode  :character   Mode  :character  
-##                                                          
-##                                                          
-##                                                          
-##     X1985              X1986              X1987          
-##  Length:17692       Length:17692       Length:17692      
-##  Class :character   Class :character   Class :character  
-##  Mode  :character   Mode  :character   Mode  :character  
-##                                                          
-##                                                          
-##                                                          
-##     X1988              X1989              X1990          
-##  Length:17692       Length:17692       Length:17692      
-##  Class :character   Class :character   Class :character  
-##  Mode  :character   Mode  :character   Mode  :character  
-##                                                          
-##                                                          
-##                                                          
-##     X1991              X1992              X1993          
-##  Length:17692       Length:17692       Length:17692      
-##  Class :character   Class :character   Class :character  
-##  Mode  :character   Mode  :character   Mode  :character  
-##                                                          
-##                                                          
-##                                                          
-##     X1994              X1995              X1996          
-##  Length:17692       Length:17692       Length:17692      
-##  Class :character   Class :character   Class :character  
-##  Mode  :character   Mode  :character   Mode  :character  
-##                                                          
-##                                                          
-##                                                          
-##     X1997              X1998              X1999          
-##  Length:17692       Length:17692       Length:17692      
-##  Class :character   Class :character   Class :character  
-##  Mode  :character   Mode  :character   Mode  :character  
-##                                                          
-##                                                          
-##                                                          
-##     X2000              X2001              X2002          
-##  Length:17692       Length:17692       Length:17692      
-##  Class :character   Class :character   Class :character  
-##  Mode  :character   Mode  :character   Mode  :character  
-##                                                          
-##                                                          
-##                                                          
-##     X2003              X2004              X2005          
-##  Length:17692       Length:17692       Length:17692      
-##  Class :character   Class :character   Class :character  
-##  Mode  :character   Mode  :character   Mode  :character  
-##                                                          
-##                                                          
-##                                                          
-##     X2006              X2007              X2008          
-##  Length:17692       Length:17692       Length:17692      
-##  Class :character   Class :character   Class :character  
-##  Mode  :character   Mode  :character   Mode  :character  
-##                                                          
-##                                                          
-##                                                          
-##     X2009              X2010              X2011          
-##  Length:17692       Length:17692       Length:17692      
-##  Class :character   Class :character   Class :character  
-##  Mode  :character   Mode  :character   Mode  :character  
-##                                                          
-##                                                          
-##                                                          
-##     X2012          
-##  Length:17692      
-##  Class :character  
-##  Mode  :character  
-##                    
-##                    
+##  Length:17692              Min.   :18.00
+##  Class :character          1st Qu.:31.00
+##  Mode  :character          Median :37.00
+##                            Mean   :45.34
+##                            3rd Qu.:57.00
+##                            Max.   :88.00
+##  Measure..Measure.     X1950              X1951
+##  Length:17692       Length:17692       Length:17692
+##  Class :character   Class :character   Class :character
+##  Mode  :character   Mode  :character   Mode  :character
+##
+##
+##
+##     X1952              X1953              X1954
+##  Length:17692       Length:17692       Length:17692
+##  Class :character   Class :character   Class :character
+##  Mode  :character   Mode  :character   Mode  :character
+##
+##
+##
+##     X1955              X1956              X1957
+##  Length:17692       Length:17692       Length:17692
+##  Class :character   Class :character   Class :character
+##  Mode  :character   Mode  :character   Mode  :character
+##
+##
+##
+##     X1958              X1959              X1960
+##  Length:17692       Length:17692       Length:17692
+##  Class :character   Class :character   Class :character
+##  Mode  :character   Mode  :character   Mode  :character
+##
+##
+##
+##     X1961              X1962              X1963
+##  Length:17692       Length:17692       Length:17692
+##  Class :character   Class :character   Class :character
+##  Mode  :character   Mode  :character   Mode  :character
+##
+##
+##
+##     X1964              X1965              X1966
+##  Length:17692       Length:17692       Length:17692
+##  Class :character   Class :character   Class :character
+##  Mode  :character   Mode  :character   Mode  :character
+##
+##
+##
+##     X1967              X1968              X1969
+##  Length:17692       Length:17692       Length:17692
+##  Class :character   Class :character   Class :character
+##  Mode  :character   Mode  :character   Mode  :character
+##
+##
+##
+##     X1970              X1971              X1972
+##  Length:17692       Length:17692       Length:17692
+##  Class :character   Class :character   Class :character
+##  Mode  :character   Mode  :character   Mode  :character
+##
+##
+##
+##     X1973              X1974              X1975
+##  Length:17692       Length:17692       Length:17692
+##  Class :character   Class :character   Class :character
+##  Mode  :character   Mode  :character   Mode  :character
+##
+##
+##
+##     X1976              X1977              X1978
+##  Length:17692       Length:17692       Length:17692
+##  Class :character   Class :character   Class :character
+##  Mode  :character   Mode  :character   Mode  :character
+##
+##
+##
+##     X1979              X1980              X1981
+##  Length:17692       Length:17692       Length:17692
+##  Class :character   Class :character   Class :character
+##  Mode  :character   Mode  :character   Mode  :character
+##
+##
+##
+##     X1982              X1983              X1984
+##  Length:17692       Length:17692       Length:17692
+##  Class :character   Class :character   Class :character
+##  Mode  :character   Mode  :character   Mode  :character
+##
+##
+##
+##     X1985              X1986              X1987
+##  Length:17692       Length:17692       Length:17692
+##  Class :character   Class :character   Class :character
+##  Mode  :character   Mode  :character   Mode  :character
+##
+##
+##
+##     X1988              X1989              X1990
+##  Length:17692       Length:17692       Length:17692
+##  Class :character   Class :character   Class :character
+##  Mode  :character   Mode  :character   Mode  :character
+##
+##
+##
+##     X1991              X1992              X1993
+##  Length:17692       Length:17692       Length:17692
+##  Class :character   Class :character   Class :character
+##  Mode  :character   Mode  :character   Mode  :character
+##
+##
+##
+##     X1994              X1995              X1996
+##  Length:17692       Length:17692       Length:17692
+##  Class :character   Class :character   Class :character
+##  Mode  :character   Mode  :character   Mode  :character
+##
+##
+##
+##     X1997              X1998              X1999
+##  Length:17692       Length:17692       Length:17692
+##  Class :character   Class :character   Class :character
+##  Mode  :character   Mode  :character   Mode  :character
+##
+##
+##
+##     X2000              X2001              X2002
+##  Length:17692       Length:17692       Length:17692
+##  Class :character   Class :character   Class :character
+##  Mode  :character   Mode  :character   Mode  :character
+##
+##
+##
+##     X2003              X2004              X2005
+##  Length:17692       Length:17692       Length:17692
+##  Class :character   Class :character   Class :character
+##  Mode  :character   Mode  :character   Mode  :character
+##
+##
+##
+##     X2006              X2007              X2008
+##  Length:17692       Length:17692       Length:17692
+##  Class :character   Class :character   Class :character
+##  Mode  :character   Mode  :character   Mode  :character
+##
+##
+##
+##     X2009              X2010              X2011
+##  Length:17692       Length:17692       Length:17692
+##  Class :character   Class :character   Class :character
+##  Mode  :character   Mode  :character   Mode  :character
+##
+##
+##
+##     X2012
+##  Length:17692
+##  Class :character
+##  Mode  :character
+##
+##
 ## </code></pre>
 <pre class="r"><code>if (interactive()) View(fao) # interactive==T if in Console, not knitting</code></pre>
 </div>
@@ -1070,7 +1070,7 @@ d &lt;- gather(fao, key=&#39;Year&#39;, value=&#39;Catch&#39;, num_range(&#39;X&
 # We can convert back to wide format with the spread function by calling the previously created variables
 spread(d,Year, Catch)</code></pre>
 <pre><code>## Source: local data frame [17,692 x 71]
-## 
+##
 ##    Country..Country.      Species..ASFIS.species. Species..ISSCAAP.group.
 ##                (chr)                        (chr)                   (int)
 ## 1            Albania Angelsharks, sand devils nei                      38
@@ -1119,7 +1119,7 @@ d &lt;- rename(
   year        = Year,catch=Catch)
 d</code></pre>
 <pre><code>## Source: local data frame [1,114,596 x 10]
-## 
+##
 ##    country                     commname spgroup
 ##      (chr)                        (chr)   (int)
 ## 1  Albania Angelsharks, sand devils nei      38
@@ -1142,7 +1142,7 @@ d</code></pre>
 <pre class="r"><code># we could chose all the columns to keep
 select(d,country, commname, sciname, spcode, spgroupname, regionfao, year, catch)</code></pre>
 <pre><code>## Source: local data frame [1,114,596 x 8]
-## 
+##
 ##    country                     commname                  sciname
 ##      (chr)                        (chr)                    (chr)
 ## 1  Albania Angelsharks, sand devils nei              Squatinidae
@@ -1164,7 +1164,7 @@ d&lt;-select(d,-spgroup,-unit)</code></pre>
 <pre class="r"><code># select all coloumns that begin with the letter s
 select(d, starts_with(&#39;s&#39;))</code></pre>
 <pre><code>## Source: local data frame [1,114,596 x 3]
-## 
+##
 ##                        spgroupname     spcode                  sciname
 ##                              (chr)      (chr)                    (chr)
 ## 1          Sharks, rays, chimaeras 10903XXXXX              Squatinidae
@@ -1181,7 +1181,7 @@ select(d, starts_with(&#39;s&#39;))</code></pre>
 <pre class="r"><code># select columns that match a regular expression
 select(d, matches(&#39;*name&#39;))</code></pre>
 <pre><code>## Source: local data frame [1,114,596 x 3]
-## 
+##
 ##                        commname                     spgroupname
 ##                           (chr)                           (chr)
 ## 1  Angelsharks, sand devils nei         Sharks, rays, chimaeras
@@ -1196,10 +1196,10 @@ select(d, matches(&#39;*name&#39;))</code></pre>
 ## 10            Common cuttlefish Squids, cuttlefishes, octopuses
 ## ..                          ...                             ...
 ## Variables not shown: sciname (chr)</code></pre>
-<pre class="r"><code># select columns between two columns by referencing their position like normal [,x:y] syntax 
+<pre class="r"><code># select columns between two columns by referencing their position like normal [,x:y] syntax
 select(d, country, spcode:year)</code></pre>
 <pre><code>## Source: local data frame [1,114,596 x 5]
-## 
+##
 ##    country     spcode                  sciname regionfao  year
 ##      (chr)      (chr)                    (chr)     (int) (chr)
 ## 1  Albania 10903XXXXX              Squatinidae        37 X1950
@@ -1216,7 +1216,7 @@ select(d, country, spcode:year)</code></pre>
 <pre class="r"><code># select every column (though I haven&#39;t found a situation where this is useful yet...)
 select(d,everything())</code></pre>
 <pre><code>## Source: local data frame [1,114,596 x 8]
-## 
+##
 ##    country                     commname                     spgroupname
 ##      (chr)                        (chr)                           (chr)
 ## 1  Albania Angelsharks, sand devils nei         Sharks, rays, chimaeras
@@ -1242,7 +1242,7 @@ d&lt;-arrange(d,country,sciname,regionfao,year)
 # if we&#39;d like the years to be descending
 arrange(d, country, desc(sciname), regionfao, desc(year))</code></pre>
 <pre><code>## Source: local data frame [1,114,596 x 8]
-## 
+##
 ##    country  commname                   spgroupname     spcode    sciname
 ##      (chr)     (chr)                         (chr)      (chr)      (chr)
 ## 1  Albania John dory Miscellaneous demersal fishes 1620100101 Zeus faber
@@ -1260,7 +1260,7 @@ arrange(d, country, desc(sciname), regionfao, desc(year))</code></pre>
 <pre class="r"><code># if we want to first order by species
 arrange(d, sciname, country, regionfao, year)</code></pre>
 <pre><code>## Source: local data frame [1,114,596 x 8]
-## 
+##
 ##    country        commname                  spgroupname     spcode
 ##      (chr)           (chr)                        (chr)      (chr)
 ## 1    Qatar Flat needlefish Miscellaneous pelagic fishes 1470100801
@@ -1297,7 +1297,7 @@ d&lt;-filter(d,!(country %in% c(&#39;Totals - Quantity (number)&#39;,&#39;Totals
 # print data
 d</code></pre>
 <pre><code>## Source: local data frame [310,619 x 9]
-## 
+##
 ##    country                      commname                  spgroupname
 ##      (chr)                         (chr)                        (chr)
 ## 1  Albania           Blue and red shrimp              Shrimps, prawns
@@ -1339,14 +1339,14 @@ d</code></pre>
   mutate(
     year        = as.numeric(str_replace(year, &#39;X&#39;, &#39;&#39;)), # strip X off all year values and convert to numeric
     catch       = as.numeric(gsub(catch, pattern=c(&#39; F&#39;), replacement = &#39;&#39;, fixed = T)),
-    logcatch    = log10(catch)) %&gt;% # create a  new variable of log catch 
+    logcatch    = log10(catch)) %&gt;% # create a  new variable of log catch
   filter(!country %in% c(&#39;Totals - Quantity (number)&#39;,&#39;Totals - Quantity (tonnes)&#39;) &amp; !is.na(catch)) # remove &#39;Totals&#39; rows - rows: 1,114,596 -&gt; 310,619</code></pre>
 <pre><code>## Warning in eval(substitute(expr), envir, enclos): NAs introduced by
 ## coercion</code></pre>
 <pre class="r"><code># print data frame
 d</code></pre>
 <pre><code>## Source: local data frame [357,807 x 9]
-## 
+##
 ##    country                      commname                  spgroupname
 ##      (chr)                         (chr)                        (chr)
 ## 1  Albania           Blue and red shrimp              Shrimps, prawns
@@ -1369,7 +1369,7 @@ d</code></pre>
 <pre class="r"><code>d %&gt;%
   complete(year = 1950:2012)</code></pre>
 <pre><code>## Source: local data frame [357,807 x 9]
-## 
+##
 ##     year country                     commname
 ##    (dbl)   (chr)                        (chr)
 ## 1   1950 Albania            Marine fishes nei
@@ -1390,7 +1390,7 @@ d</code></pre>
   complete(year = 1950:2012) %&gt;%
   ungroup()</code></pre>
 <pre><code>## Source: local data frame [1,099,791 x 9]
-## 
+##
 ##    country             sciname            commname regionfao
 ##      (chr)               (chr)               (chr)     (int)
 ## 1  Albania Aristeus antennatus Blue and red shrimp        37
@@ -1412,10 +1412,10 @@ d</code></pre>
 <p>The <code>df$spcode</code> variable actually consists of 5 individual parts.</p>
 <p><img src="img/spcodes.png" alt="" /></p>
 <p>We decide we want to create a new column for each taxonomic division of the spcode. We can accomplish this with <code>separate()</code> and undue it with <code>unite()</code></p>
-<pre class="r"><code># create new variables for each taxonomic component 
+<pre class="r"><code># create new variables for each taxonomic component
 d&lt;-separate(d,spcode, into = c(&#39;maintaxa&#39;,&#39;order&#39;,&#39;family&#39;,&#39;genus&#39;,&#39;species&#39;), sep = c(2,4,6,9))
 
-# recombine the columns with unite 
+# recombine the columns with unite
 d&lt;-unite(d, col = spcode, maintaxa:species, sep = &#39;&#39;) # Note - we can use helper functions here if needed</code></pre>
 </div>
 </div>
@@ -1452,12 +1452,12 @@ us&lt;- d %&gt;%
   filter(country==&#39;United States of America&#39; &amp; year==2012) %&gt;%
   select(country, sciname, commname, spgroupname) %&gt;%
   distinct()
-  
-# left join to retain all data in our d data frame. 
-us %&gt;% 
+
+# left join to retain all data in our d data frame.
+us %&gt;%
   left_join(lh, by = &#39;sciname&#39;) # we only need to specify the right hand data set to join lh with since we&#39;ve piped</code></pre>
 <pre><code>## Source: local data frame [308 x 8]
-## 
+##
 ##                     country                 sciname
 ##                       (chr)                   (chr)
 ## 1  United States of America  Acanthocybium solandri
@@ -1473,11 +1473,11 @@ us %&gt;%
 ## ..                      ...                     ...
 ## Variables not shown: commname (chr), spgroupname (chr), vbk (dbl), temp
 ##   (dbl), maxl (dbl), agem (dbl)</code></pre>
-<pre class="r"><code># right join to keep all lh data.  
+<pre class="r"><code># right join to keep all lh data.
 us %&gt;%
   right_join(lh, by = &#39;sciname&#39;)</code></pre>
 <pre><code>## Source: local data frame [1,059 x 8]
-## 
+##
 ##                     country                  sciname            commname
 ##                       (chr)                    (chr)               (chr)
 ## 1                        NA   Notorynchus cepedianus                  NA
@@ -1497,7 +1497,7 @@ us %&gt;%
 us %&gt;%
   inner_join(lh, by = &#39;sciname&#39;)</code></pre>
 <pre><code>## Source: local data frame [245 x 8]
-## 
+##
 ##                     country                     sciname
 ##                       (chr)                       (chr)
 ## 1  United States of America      Acanthocybium solandri
@@ -1517,7 +1517,7 @@ us %&gt;%
 us %&gt;%
   full_join(lh, by = &#39;sciname&#39;)</code></pre>
 <pre><code>## Source: local data frame [1,122 x 8]
-## 
+##
 ##                     country                 sciname
 ##                       (chr)                   (chr)
 ## 1  United States of America  Acanthocybium solandri
@@ -1544,7 +1544,7 @@ d %&gt;%
   select(year,country,commname,catch) %&gt;%
   arrange(desc(catch))</code></pre>
 <pre><code>## Source: local data frame [90 x 4]
-## 
+##
 ##     year country               commname  catch
 ##    (dbl)   (chr)                  (chr)  (dbl)
 ## 1   2012  Canada         Northern prawn 143350
@@ -1564,7 +1564,7 @@ d %&gt;%
   select(country,commname,regionfao,catch) %&gt;%
   arrange(desc(catch))</code></pre>
 <pre><code>## Source: local data frame [95 x 4]
-## 
+##
 ##                     country             commname regionfao  catch
 ##                       (chr)                (chr)     (int)  (dbl)
 ## 1  United States of America    Atlantic menhaden        21 224261
@@ -1585,7 +1585,7 @@ d %&gt;%
   arrange(desc(catch)) %&gt;%
   slice(1:10)</code></pre>
 <pre><code>## Source: local data frame [10 x 3]
-## 
+##
 ##                     country                       commname catch
 ##                       (chr)                          (chr) (dbl)
 ## 1                     India Sharks, rays, skates, etc. nei 53652
@@ -1628,7 +1628,7 @@ cntry &lt;- d %&gt;%
   arrange(country)
 cntry</code></pre>
 <pre><code>## Source: local data frame [11,156 x 3]
-## 
+##
 ##     year country totalcatch
 ##    (dbl)   (chr)      (dbl)
 ## 1   1950 Albania       1000
@@ -1646,11 +1646,11 @@ cntry</code></pre>
 spcatch &lt;- d %&gt;%
   group_by(year,spgroupname) %&gt;%
   summarize(totalcatch=sum(catch, na.rm=T)) %&gt;%
-  ungroup() %&gt;% 
+  ungroup() %&gt;%
   arrange(spgroupname)
 spcatch</code></pre>
 <pre><code>## Source: local data frame [1,886 x 3]
-## 
+##
 ##     year               spgroupname totalcatch
 ##    (dbl)                     (chr)      (dbl)
 ## 1   1950 Abalones, winkles, conchs      30509
@@ -1673,7 +1673,7 @@ usa &lt;- d %&gt;%
   arrange(spgroupname)
 usa</code></pre>
 <pre><code>## Source: local data frame [1,628 x 4]
-## 
+##
 ##     year                  country               spgroupname totalcatch
 ##    (dbl)                    (chr)                     (chr)      (dbl)
 ## 1   1950 United States of America Abalones, winkles, conchs       2499
@@ -1702,7 +1702,7 @@ cntry %&gt;%
     ingrouprank = dense_rank(totalcatch))</code></pre>
 <pre><code>## Source: local data frame [11,156 x 7]
 ## Groups: country [200]
-## 
+##
 ##     year country totalcatch globalcatch globalrank  percglobal ingrouprank
 ##    (dbl)   (chr)      (dbl)       (dbl)      (int)       (dbl)       (int)
 ## 1   1950 Albania       1000    16780913         13 0.005959151           2
@@ -1737,17 +1737,17 @@ dat &lt;- d %&gt;%
     id = paste(country,spcode,regionfao, sep = &#39;_&#39;)) %&gt;% #Generate a unique ID for each fishery
   group_by(id) %&gt;%
   mutate(
-    mean_log_catch = mean(logcatch, na.rm = T), 
-    cv_log_catch   = sd(logcatch, na.rm = T)/mean(logcatch, na.rm = T), 
+    mean_log_catch = mean(logcatch, na.rm = T),
+    cv_log_catch   = sd(logcatch, na.rm = T)/mean(logcatch, na.rm = T),
     length_catch   = sum(is.na(logcatch) == F &amp; logcatch &gt;0)) %&gt;% # we want to keep some of the other data as well
   filter(
-    year == max(year) &amp; length_catch &gt; 10, 
+    year == max(year) &amp; length_catch &gt; 10,
     is.finite(mean_log_catch) == T,
     cv_log_catch &gt;0) %&gt;% # We don&#39;t want repeated entries, so let&#39;s just grab one random year
   select(-year, -catch, -logcatch)
 
 # Always plot!
-ggplot(dat, aes(mean_log_catch,cv_log_catch)) + 
+ggplot(dat, aes(mean_log_catch,cv_log_catch)) +
   geom_point()</code></pre>
 <p><img src="index_files/figure-html/unnamed-chunk-17-1.png" title="" alt="" width="672" /></p>
 <p>OK, we see we’re onto something here: there’s clearly a relationship between average catch and the CV of the catch. We want to build a model that predicts that. Let’s create a composite score of the mean log catch and the inverse of the CV. We’re going to scale the log catches by the maximum log catch, and the CV by the the maximum of 1/CV. We also want to add in our nice life history data</p>
@@ -1755,13 +1755,13 @@ ggplot(dat, aes(mean_log_catch,cv_log_catch)) +
   ungroup() %&gt;% #we want global statistics now
   mutate(
     scaled_ml_catch = mean_log_catch/max(mean_log_catch),
-    scaled_cv_catch =  (cv_log_catch/min(cv_log_catch))^-1, 
+    scaled_cv_catch =  (cv_log_catch/min(cv_log_catch))^-1,
     fishiness       = scaled_ml_catch + scaled_cv_catch) %&gt;%
   left_join(lh, by = &#39;sciname&#39;)
 
 regplot &lt;- regdat %&gt;% #great thing about ggplot is the ability to save as an object and use and modify later
-  ggplot(aes(mean_log_catch,cv_log_catch, fill = fishiness)) + 
-  geom_point(shape = 21) + 
+  ggplot(aes(mean_log_catch,cv_log_catch, fill = fishiness)) +
+  geom_point(shape = 21) +
   scale_fill_gradient(low = &#39;red&#39;,high = &#39;green&#39;)
 
 regplot # grea</code></pre>
@@ -1783,14 +1783,14 @@ reg_fmla &lt;- as.formula(paste(&#39;fishiness ~&#39;,paste(reg_vars, collapse =
 
 fish_model &lt;- lm(reg_fmla, data = filtered_dat) #run a linear regression
 summary(fish_model)</code></pre>
-<pre><code>## 
+<pre><code>##
 ## Call:
 ## lm(formula = reg_fmla, data = filtered_dat)
-## 
+##
 ## Residuals:
-##      Min       1Q   Median       3Q      Max 
-## -0.64362 -0.12021  0.00152  0.10966  0.86657 
-## 
+##      Min       1Q   Median       3Q      Max
+## -0.64362 -0.12021  0.00152  0.10966  0.86657
+##
 ## Coefficients:
 ##                                              Estimate Std. Error t value
 ## (Intercept)                                 0.6601333  0.0281170  23.478
@@ -1823,42 +1823,42 @@ summary(fish_model)</code></pre>
 ## vbk                                        -0.0551644  0.0221175  -2.494
 ## maxl                                       -0.0003563  0.0000372  -9.578
 ## temp                                        0.0014007  0.0015005   0.933
-##                                            Pr(&gt;|t|)    
+##                                            Pr(&gt;|t|)
 ## (Intercept)                                 &lt; 2e-16 ***
-## regionfao27                                0.018000 *  
-## regionfao31                                0.962561    
-## regionfao34                                0.023657 *  
-## regionfao37                                0.683740    
-## regionfao41                                0.280898    
-## regionfao47                                0.190517    
-## regionfao48                                0.448908    
+## regionfao27                                0.018000 *
+## regionfao31                                0.962561
+## regionfao34                                0.023657 *
+## regionfao37                                0.683740
+## regionfao41                                0.280898
+## regionfao47                                0.190517
+## regionfao48                                0.448908
 ## regionfao51                                1.40e-06 ***
 ## regionfao57                                0.000372 ***
-## regionfao58                                0.223620    
+## regionfao58                                0.223620
 ## regionfao61                                 &lt; 2e-16 ***
-## regionfao67                                0.068606 .  
+## regionfao67                                0.068606 .
 ## regionfao71                                1.26e-10 ***
 ## regionfao77                                3.17e-05 ***
-## regionfao81                                0.012619 *  
+## regionfao81                                0.012619 *
 ## regionfao87                                5.87e-07 ***
 ## spgroupnameFlounders, halibuts, soles      2.22e-09 ***
-## spgroupnameHerrings, sardines, anchovies   0.797047    
+## spgroupnameHerrings, sardines, anchovies   0.797047
 ## spgroupnameMiscellaneous coastal fishes    3.66e-06 ***
 ## spgroupnameMiscellaneous demersal fishes   0.000176 ***
 ## spgroupnameMiscellaneous diadromous fishes 8.86e-09 ***
 ## spgroupnameMiscellaneous pelagic fishes    2.48e-10 ***
 ## spgroupnameSalmons, trouts, smelts         1.96e-08 ***
 ## spgroupnameSharks, rays, chimaeras         5.72e-13 ***
-## spgroupnameSturgeons, paddlefishes         0.018467 *  
+## spgroupnameSturgeons, paddlefishes         0.018467 *
 ## spgroupnameTunas, bonitos, billfishes       &lt; 2e-16 ***
-## vbk                                        0.012723 *  
+## vbk                                        0.012723 *
 ## maxl                                        &lt; 2e-16 ***
-## temp                                       0.350703    
+## temp                                       0.350703
 ## ---
 ## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1
-## 
+##
 ## Residual standard error: 0.1728 on 1649 degrees of freedom
-## Multiple R-squared:   0.28,  Adjusted R-squared:  0.2674 
+## Multiple R-squared:   0.28,  Adjusted R-squared:  0.2674
 ## F-statistic: 22.12 on 29 and 1649 DF,  p-value: &lt; 2.2e-16</code></pre>
 <p>Now we’ve got a model! we’re close to being able to use data to predict where we’ll start our fishing operation. But, while we know nothing about fishing, we are good statisticians, and we know we should look at our regression before using it to make a big life decision. This is where <code>broom</code> comes in. R has all kinds of great functions, like <code>summary()</code> to look at regressions. But, they can be a little ad hoc, and difficult to manipulate. <code>broom</code> helps us tidy up our regression data. First, suppose that we want a better way to look at summary statistics from the regression. The <code>glance()</code> function from the <code>broom</code> package extracts important summary statistics from the model, like the <em>R<sup>2</sup></em>, the AIC, and the BIC.</p>
 <pre class="r"><code>library(broom)
@@ -1888,7 +1888,7 @@ regression_plot &lt;- (
   +theme(axis.text.x=element_text(angle=45,hjust=0.9,vjust=0.9)) +
     geom_errorbar(mapping=aes(ymin=estimate-1.96*std.error,ymax=estimate+1.96*std.error)) +
     xlab(&#39;Variable&#39;) +
-    ylab(paste(&#39;Marginal Effect on &#39;,names(fish_model$model)[1],sep=&#39;&#39;)) + 
+    ylab(paste(&#39;Marginal Effect on &#39;,names(fish_model$model)[1],sep=&#39;&#39;)) +
     coord_flip())
 
 regression_plot</code></pre>
@@ -1898,11 +1898,11 @@ regression_plot</code></pre>
 <pre class="r"><code>auged_reg &lt;- augment(fish_model)
 
 obs_v_pred &lt;- auged_reg %&gt;%
-  ggplot(aes(fishiness, .fitted)) + 
-  geom_point(shape = 21, size = 4, alpha = 0.6, fill = &#39;steelblue4&#39;) + 
-  geom_abline(aes(slope=1, intercept = 0)) + 
-  xlab(&#39;ovbserved&#39;) + 
-  ylab(&#39;predicted&#39;) + 
+  ggplot(aes(fishiness, .fitted)) +
+  geom_point(shape = 21, size = 4, alpha = 0.6, fill = &#39;steelblue4&#39;) +
+  geom_abline(aes(slope=1, intercept = 0)) +
+  xlab(&#39;ovbserved&#39;) +
+  ylab(&#39;predicted&#39;) +
   geom_label(aes(0.25,0.7), label = paste(&#39;R2 = &#39;, round(reg_summary$r.squared,2), sep = &#39;&#39;))
 obs_v_pred</code></pre>
 <p><img src="index_files/figure-html/unnamed-chunk-22-1.png" title="" alt="" width="672" /></p>
@@ -1917,35 +1917,35 @@ qq_plot</code></pre>
 <pre class="r"><code>hetsk_plot &lt;- auged_reg %&gt;% #plot fitted vs residuals
   ggplot(aes(.fitted, .resid)) +
   geom_point(shape = 21, size = 4, alpha = 0.6, fill = &#39;steelblue4&#39;) +
-  geom_hline(aes(yintercept = 0)) + 
+  geom_hline(aes(yintercept = 0)) +
   xlab(&#39;Predicted&#39;) +
   ylab(&#39;Residuals&#39;)
 hetsk_plot</code></pre>
 <p><img src="index_files/figure-html/unnamed-chunk-23-1.png" title="" alt="" width="672" /></p>
 <p>Looks a little iffy, we’ve got some heteroskedasticity going on. Let’s try and see where it is. The great thing about <code>broom</code> is that it makes it really easy to manipulate data and plot diagnostics based on the original data.</p>
-<pre class="r"><code>hetsk_plot2 &lt;- auged_reg %&gt;% 
+<pre class="r"><code>hetsk_plot2 &lt;- auged_reg %&gt;%
   ggplot(aes(.fitted, .resid, fill = spgroupname)) +
   geom_point(shape = 21, size = 4, alpha = 0.6) +
-  geom_hline(aes(yintercept = 0)) + 
+  geom_hline(aes(yintercept = 0)) +
   xlab(&#39;Predicted&#39;) +
   ylab(&#39;Residuals&#39;)
 hetsk_plot2</code></pre>
 <p><img src="index_files/figure-html/unnamed-chunk-24-1.png" title="" alt="" width="672" /></p>
 <p>So, we see here that the culprit are the herrings and salmons. That tells us to be a little cautious in our predictive ability and estimated errors based on this model, and maybe we need to do a better job of clustering our errors. Let’s look at things another way. We saw from the coefficient plot that the region effects are the most significant in the model. How confident are we in those?</p>
 <pre class="r"><code>regional_bias &lt;- auged_reg %&gt;% #Check residuals by group
-  ggplot(aes(regionfao,.resid)) + 
-  geom_boxplot(fill = &#39;steelblue4&#39;) + 
-  geom_hline(aes(yintercept = 0)) + 
-  xlab(&#39;FAO Region&#39;) + 
+  ggplot(aes(regionfao,.resid)) +
+  geom_boxplot(fill = &#39;steelblue4&#39;) +
+  geom_hline(aes(yintercept = 0)) +
+  xlab(&#39;FAO Region&#39;) +
   ylab(&#39;Residuals&#39;)
 regional_bias</code></pre>
 <p><img src="index_files/figure-html/unnamed-chunk-25-1.png" title="" alt="" width="672" /></p>
 <pre class="r"><code>species_bias &lt;- auged_reg %&gt;%
-  ggplot(aes(spgroupname,.resid)) + 
-  geom_boxplot(fill = &#39;steelblue4&#39;) + 
-  geom_hline(aes(yintercept = 0)) + 
-  xlab(&#39;Species Category&#39;) + 
-  ylab(&#39;Residuals&#39;) + 
+  ggplot(aes(spgroupname,.resid)) +
+  geom_boxplot(fill = &#39;steelblue4&#39;) +
+  geom_hline(aes(yintercept = 0)) +
+  xlab(&#39;Species Category&#39;) +
+  ylab(&#39;Residuals&#39;) +
   coord_flip()
 species_bias</code></pre>
 <p><img src="index_files/figure-html/unnamed-chunk-25-2.png" title="" alt="" width="672" /></p>
@@ -1973,7 +1973,7 @@ food &lt;- lapply(1:100,foo) #this can be more efficient and simpler than loops<
 <pre class="r"><code># OR without plyr
 food %&gt;% lapply(as.data.frame) %&gt;% rbind_all() %&gt;% head</code></pre>
 <pre><code>## Source: local data frame [6 x 1]
-## 
+##
 ##   X[[i]]
 ##    (dbl)
 ## 1      1
@@ -2003,12 +2003,12 @@ regions &lt;- rep(unique(as.character(regdat$regionfao)), 100) #thing to test
 system.time({ #time the dplyr version
   a &lt;- lapply(regions, dplyr_fun, dat = regdat)
 })</code></pre>
-<pre><code>##    user  system elapsed 
+<pre><code>##    user  system elapsed
 ##   5.278   0.038   5.339</code></pre>
 <pre class="r"><code>system.time({ #time the basic version
   b &lt;- lapply(regions, basic_fun, dat = as.matrix(regdat))
 })</code></pre>
-<pre><code>##    user  system elapsed 
+<pre><code>##    user  system elapsed
 ##   0.759   0.125   0.886</code></pre>
 <pre class="r"><code>all(plyr::ldply(a)$V1 == plyr::ldply(b)$V1) #check and make sure they do the same thing</code></pre>
 <pre><code>## [1] TRUE</code></pre>
@@ -2046,18 +2046,18 @@ fun1&lt;-function(x,gpvar1,gpvar2,gpvar3){
     group_by_(gpvar1) %&gt;%
     mutate(
       globalcatch = sum(totalcatch,na.rm=T),
-      globalrank  = dense_rank(totalcatch)) %&gt;% 
-    group_by_(gpvar2) %&gt;% 
+      globalrank  = dense_rank(totalcatch)) %&gt;%
+    group_by_(gpvar2) %&gt;%
     mutate(
       percglobal = 100*(totalcatch/globalcatch)) %&gt;%
     group_by_(gpvar3) %&gt;%
     mutate(
       ingrouprank = dense_rank(desc(totalcatch)))
   return(y)
-}  
+}
 
 # apply function to species category and country datasets
-spcatch&lt;-fun1(spcatch,gpvar1 = c(&#39;year&#39;), gpvar2 = c(&#39;year&#39;,&#39;spgroupname&#39;), gpvar3 = c(&#39;spgroupname&#39;)) 
+spcatch&lt;-fun1(spcatch,gpvar1 = c(&#39;year&#39;), gpvar2 = c(&#39;year&#39;,&#39;spgroupname&#39;), gpvar3 = c(&#39;spgroupname&#39;))
 cntry&lt;-fun1(cntry,gpvar1 = c(&#39;year&#39;), gpvar2 = c(&#39;year&#39;,&#39;country&#39;), gpvar3 = c(&#39;country&#39;))   </code></pre>
 </div>
 <div id="using-dplyr-to-query-external-databases" class="section level3">
