@@ -14,24 +14,7 @@ output:
 
 > Data scientists, according to interviews and expert estimates, spend from 50 percent to 80 percent of their time mired in the mundane labor of collecting and preparing data, before it can be explored for useful information. - [NYTimes (2014)](http://www.nytimes.com/2014/08/18/technology/for-big-data-scientists-hurdle-to-insights-is-janitor-work.html)
 
-This tutorial will cover the `tidyr` and `dplyr` packages created by the mythical code wizard [Hadley Wickham](https://github.com/hadley) of `ggplot2` fame. The "gg" in `ggplot2` stands for the "grammar of graphics". Hadley similarly considers the functionality of the two packages `dplyr` and `tidyr` to provide the "grammar of data manipulation". The following topics will be covered:
-
-### Resources  
-
-- [Data wrangling cheatsheet (`dplyr`,`tidyr`)](http://ucsb-bren.github.io/refs/cheatsheets/data-wrangling-cheatsheet.pdf)
-- [Data wrangling with R and RStudio](https://www.rstudio.com/resources/webinars/data-wrangling-with-r-and-rstudio/)
-- [slides](http://ucsb-bren.github.io/env-info/wk03_dplyr/wrangling-webinar.pdf)
-- [dplyr vignette: Introduction to dplyr](https://cran.rstudio.com/web/packages/dplyr/vignettes/introduction.html)
-- [Two-table verbs](https://cran.rstudio.com/web/packages/dplyr/vignettes/two-table.html)
-- [Window functions and grouped mutate/filter](https://cran.rstudio.com/web/packages/dplyr/vignettes/window-functions.html)
-- [Databases](https://cran.rstudio.com/web/packages/dplyr/vignettes/databases.html)
-- [Non-standard evaluation](https://cran.rstudio.com/web/packages/dplyr/vignettes/nse.html)
-- [tidyr vignette: Tidy data](https://cran.r-project.org/web/packages/tidyr/vignettes/tidy-data.html)
-- [Introduction to dplyr for Faster Data Manipulation in R](https://rpubs.com/justmarkham/dplyr-tutorial)
-- [Environmental Informatics | ucsb-bren/env-info](http://ucsb-bren.github.io/env-info/)
-- bigrquery tutorials:
-- [A new data processing workflow for R: dplyr, magrittr, tidyr, ggplot2 | Technical Tidbits From Spatial Analysis & Data Science](http://zevross.com/blog/2015/01/13/a-new-data-processing-workflow-for-r-dplyr-magrittr-tidyr-ggplot2/) (newer)
-- [Fetching BigQuery Data](http://dtkaplan.github.io/CVC/Data/Birthdays/Birthdays.html)
+This tutorial will cover the `tidyr` and `dplyr` packages created by the mythical code wizard [Hadley Wickham](https://github.com/hadley) of `ggplot2` fame. The "gg" in `ggplot2` stands for the "grammar of graphics". Hadley similarly considers the functionality of the two packages `dplyr` and `tidyr` to provide the "grammar of data manipulation".
 
 ### Getting Started  
 
@@ -151,16 +134,17 @@ if (interactive()) View(d) # interactive==T if in Console, not knitting
 Now let's rename the columns to more manageable names (syntax is *new name* = *old name*)
 ```{r, eval=T,echo=T,results='hide'}
 # Note the use of backticks around column names with special characters like "("
-d <- dplyr::rename(d,
-          country     = Country..Country.,
-          commname    = Species..ASFIS.species.,
-          sciname     = Species..ASFIS.species..2,
-          spcode      = Species..ASFIS.species..1,
-          spgroup     = Species..ISSCAAP.group.,
-          spgroupname = Species..ISSCAAP.group..1,
-          regionfao   = Fishing.area..FAO.major.fishing.area.,
-          unit        = Measure..Measure.,
-          year        = Year,catch=Catch)
+d <- dplyr::rename(
+  d,
+  country     = Country..Country.,
+  commname    = Species..ASFIS.species.,
+  sciname     = Species..ASFIS.species..2,
+  spcode      = Species..ASFIS.species..1,
+  spgroup     = Species..ISSCAAP.group.,
+  spgroupname = Species..ISSCAAP.group..1,
+  regionfao   = Fishing.area..FAO.major.fishing.area.,
+  unit        = Measure..Measure.,
+  year        = Year,catch=Catch)
 
 ```
 
@@ -209,10 +193,11 @@ arrange(d, sciname, country, regionfao, year)
 #### Mutate  
 Mutate can be used to edit existing variables or create new ones.
 ```{r, eval=T,echo=T, warning=F,results='hide'}
-d <- mutate(d,
-            year      = as.numeric(str_replace(year, 'X', '')), # strip X off all year values and convert to numeric
-            catch     = as.numeric(str_replace(catch, c(' F','...','-'), replacement = '')),
-            logcatch  = log10(catch)) # create a  new variable of log catch
+d <- mutate(
+  d,
+  year      = as.numeric(str_replace(year, 'X', '')), # strip X off all year values and convert to numeric
+  catch     = as.numeric(str_replace(catch, c(' F','...','-'), replacement = '')),
+  logcatch  = log10(catch)) # create a  new variable of log catch
 ```
 
 
@@ -316,7 +301,7 @@ rm(mpack)
 
 lh<-lh %>%
   tbl_df() %>%
-  dplyr::rename(sciname=sname) %>% # rename to sciname for joining
+  rename(sciname=sname) %>% # rename to sciname for joining
   select(sciname,vbk,temp,maxl,agem) %>% # select variables we wish to add
   slice(match(unique(lh$sname),lh$sname))
 
@@ -390,21 +375,21 @@ Using `group_by()` and `summarize()` let's calculate total global harvest from 1
 global <- d %>%
   ungroup() %>%
   group_by(year) %>%
-  dplyr::summarize(totalcatch=sum(catch,na.rm=T)) %>%
+  summarize(totalcatch=sum(catch,na.rm=T)) %>%
   ggplot(aes(x=year,y=totalcatch)) +
   geom_line()
 
 # Global harvest by country
 cntry<-d %>%
   group_by(year,country) %>%
-  dplyr::summarize(totalcatch=sum(catch, na.rm=T)) %>%
+  summarize(totalcatch=sum(catch, na.rm=T)) %>%
   ungroup() %>% # -- Here's an example of why you need to ungroup! --
   dplyr::arrange(country)
 
 # Global harvest by species category
 spcatch <- d %>%
   group_by(year,spgroupname) %>%
-  dplyr::summarize(totalcatch=sum(catch, na.rm=T)) %>%
+  summarize(totalcatch=sum(catch, na.rm=T)) %>%
   ungroup() %>% 
   arrange(spgroupname)
 
@@ -412,7 +397,7 @@ spcatch <- d %>%
 usa<- d %>%
   filter(country=='United States of America') %>%
   group_by(year,country,spgroupname) %>%
-  dplyr::summarize(totalcatch=sum(catch,na.rm=T)) %>%
+  summarize(totalcatch=sum(catch,na.rm=T)) %>%
   ungroup() %>%
   arrange(spgroupname)
 ```
@@ -459,10 +444,17 @@ Our first goals:
 # Prep our data
 dat <- d %>%
   ungroup() %>% #Often a good idea to ungroup before starting something new
-  mutate(id = paste(country,spcode,regionfao, sep = '_')) %>% #Generate a unique ID for each fishery
+  mutate(
+    id = paste(country,spcode,regionfao, sep = '_')) %>% #Generate a unique ID for each fishery
   group_by(id) %>%
-  mutate(mean_log_catch = mean(logcatch, na.rm = T), cv_log_catch = sd(logcatch, na.rm = T)/mean(logcatch, na.rm = T), length_catch = sum(is.na(logcatch) == F & logcatch >0)) %>% # we want to keep some of the other data as well
-  filter(year == max(year) & length_catch > 10 & is.finite(mean_log_catch) == T & cv_log_catch >0) %>% # We don't want repeated entries, so let's just grab one random year
+  mutate(
+    mean_log_catch = mean(logcatch, na.rm = T), 
+    cv_log_catch   = sd(logcatch, na.rm = T)/mean(logcatch, na.rm = T), 
+    length_catch   = sum(is.na(logcatch) == F & logcatch >0)) %>% # we want to keep some of the other data as well
+  filter(
+    year == max(year) & length_catch > 10, 
+    is.finite(mean_log_catch) == T,
+    cv_log_catch >0) %>% # We don't want repeated entries, so let's just grab one random year
   dplyr::select(-year, -catch, -logcatch)
 
 # Always plot!
@@ -477,7 +469,10 @@ OK, we see we're onto something here: there's clearly a relationship between ave
 
 regdat <-  dat %>%
   ungroup() %>% #we want global statistics now
-  mutate(scaled_ml_catch = mean_log_catch/max(mean_log_catch), scaled_cv_catch =  (cv_log_catch/min(cv_log_catch))^-1, fishiness = scaled_ml_catch + scaled_cv_catch) %>%
+  mutate(
+    scaled_ml_catch = mean_log_catch/max(mean_log_catch),
+    scaled_cv_catch =  (cv_log_catch/min(cv_log_catch))^-1, 
+    fishiness       = scaled_ml_catch + scaled_cv_catch) %>%
   left_join(lh, by = 'sciname')
 
 regplot <- regdat %>% #great thing about ggplot is the ability to save as an object and use and modify later
@@ -501,7 +496,9 @@ filtered_dat <- regdat %>%
   ungroup() %>%
   mutate(has_all = apply(is.na(regdat[,reg_vars]) == F, 1,all)) %>%
   filter(has_all == T) %>%
-  mutate(regionfao = as.factor(regionfao),spgroupname = as.factor(spgroupname))
+  mutate(
+    regionfao   = as.factor(regionfao),
+    spgroupname = as.factor(spgroupname))
 
 reg_fmla <- as.formula(paste('fishiness ~',paste(reg_vars, collapse = '+'), sep = '')) #create regression formula
 
@@ -531,16 +528,18 @@ tidy_model$variable <- reorder(tidy_model$variable, tidy_model$p.value) #sort va
 
 tidy_model$short_pval<- pmin(tidy_model$p.value,0.2) #create abbreviated version
 
-regression_plot <- (ggplot(data=tidy_model,aes(x=variable,y=estimate,fill=short_pval))+
-                      geom_bar(position='dodge',stat='identity',color='black')+
-                      scale_fill_gradient2(high='black',mid='gray99',low='red',midpoint=0.1,
-                                           breaks=c(0.05,0.1,0.15,0.2),labels=c('0.05','0.10','0.15','>0.20')
-                                           ,name='P-Value',guide=guide_colorbar(reverse=T))
-                    +theme(axis.text.x=element_text(angle=45,hjust=0.9,vjust=0.9))+
-                      geom_errorbar(mapping=aes(ymin=estimate-1.96*std.error,ymax=estimate+1.96*std.error))+
-                      xlab('Variable')+
-                      ylab(paste('Marginal Effect on ',names(fish_model$model)[1],sep='')) + 
-                      coord_flip())
+regression_plot <- (
+  ggplot(data=tidy_model,aes(x=variable,y=estimate,fill=short_pval)) +
+    geom_bar(position='dodge',stat='identity',color='black') +
+    scale_fill_gradient2(
+      high='black',mid='gray99', low='red', midpoint=0.1,
+      breaks=c(0.05,0.1,0.15,0.2), labels=c('0.05','0.10','0.15','>0.20'),
+      name='P-Value', guide=guide_colorbar(reverse=T))
+  +theme(axis.text.x=element_text(angle=45,hjust=0.9,vjust=0.9)) +
+    geom_errorbar(mapping=aes(ymin=estimate-1.96*std.error,ymax=estimate+1.96*std.error)) +
+    xlab('Variable') +
+    ylab(paste('Marginal Effect on ',names(fish_model$model)[1],sep='')) + 
+    coord_flip())
 
 regression_plot
 
@@ -655,10 +654,11 @@ food <- lapply(1:100,foo) #this can be more efficient and simpler than loops
 Now, we've applied our function over 100 values. But, they're stuck in list form. `plyr` to the rescue! So long as each element in every list has the same dimensions, `ldply` will "smash" the list into a data frame
 
 ```{r, eval=T, echo=T}
-
-
 foody <- plyr::ldply(food)
 
+
+# OR without plyr
+foody <- food %>% lapply(as.data.frame) %>% rbind_all()
 ```
 
 The syntax is simple. `ldply` converts lists to data frames. `adply` converts arrays to data frames. You get the idea. Huge warning here. **Make sure** you load the `plyr` library **before** `dplyr`. Otherwise, bad bad things can happen. R will even throw a warning if you do it the other way around. Or, more simply, instead of loading the library, just use `plyr::ldply`. This loads that function for that instance, without actually loading into the environment and masking other things. 
@@ -718,11 +718,15 @@ Check out the following two functions:
 fun1<-function(x,gpvar1,gpvar2,gpvar3){
   y<-x %>%
     group_by(gpvar1) %>%
-    mutate(globalcatch=sum(totalcatch,na.rm=T),globalrank=dense_rank(totalcatch)) %>% # global catch and cntry rank
+    mutate(
+      globalcatch = sum(totalcatch,na.rm=T),
+      globalrank  = dense_rank(totalcatch)) %>% # global catch and cntry rank
     group_by(gpvar2) %>% # now we group by a different level before our next calculation
-    mutate(percglobal=100*(totalcatch/globalcatch)) %>%
+    mutate(
+      percglobal = 100*(totalcatch/globalcatch)) %>%
     group_by(gpvar3) %>%
-    mutate(ingrouprank=dense_rank(totalcatch))
+    mutate(
+      ingrouprank = dense_rank(totalcatch))
   return(y)
 }
 
@@ -732,11 +736,15 @@ fun1(spcatch, gpvar1 = year, gpvar2 = c(year,country), gpvar3 = country) # !!!!!
 fun1<-function(x,gpvar1,gpvar2,gpvar3){
   y<-x %>%
     group_by_(gpvar1) %>%
-    mutate(globalcatch=sum(totalcatch,na.rm=T),globalrank=dense_rank(totalcatch)) %>% 
+    mutate(
+      globalcatch = sum(totalcatch,na.rm=T),
+      globalrank  = dense_rank(totalcatch)) %>% 
     group_by_(gpvar2) %>% 
-    mutate(percglobal=100*(totalcatch/globalcatch)) %>%
+    mutate(
+      percglobal = 100*(totalcatch/globalcatch)) %>%
     group_by_(gpvar3) %>%
-    mutate(ingrouprank=dense_rank(desc(totalcatch)))
+    mutate(
+      ingrouprank = dense_rank(desc(totalcatch)))
   return(y)
 }  
 
@@ -758,8 +766,27 @@ shakespeare <-query_exec(sql, project ="test-bigquery-1243",max_pages=Inf)
 ```
 
 
+### Further Resources  
+
+- [Data wrangling cheatsheet (`dplyr`,`tidyr`)](http://ucsb-bren.github.io/refs/cheatsheets/data-wrangling-cheatsheet.pdf)
+- [Data wrangling with R and RStudio](https://www.rstudio.com/resources/webinars/data-wrangling-with-r-and-rstudio/)
+    - [slides](http://ucsb-bren.github.io/env-info/wk03_dplyr/wrangling-webinar.pdf)
+- [dplyr vignette: Introduction to dplyr](https://cran.rstudio.com/web/packages/dplyr/vignettes/introduction.html)
+    - [Two-table verbs](https://cran.rstudio.com/web/packages/dplyr/vignettes/two-table.html)
+    - [Window functions and grouped mutate/filter](https://cran.rstudio.com/web/packages/dplyr/vignettes/window-functions.html)
+    - [Databases](https://cran.rstudio.com/web/packages/dplyr/vignettes/databases.html)
+    - [Non-standard evaluation](https://cran.rstudio.com/web/packages/dplyr/vignettes/nse.html)
+- [tidyr vignette: Tidy data](https://cran.r-project.org/web/packages/tidyr/vignettes/tidy-data.html)
+- [Introduction to dplyr for Faster Data Manipulation in R](https://rpubs.com/justmarkham/dplyr-tutorial)
+- [Environmental Informatics | ucsb-bren/env-info](http://ucsb-bren.github.io/env-info/)
+- bigrquery tutorials:
+    - [A new data processing workflow for R: dplyr, magrittr, tidyr, ggplot2 | Technical Tidbits From Spatial Analysis & Data Science](http://zevross.com/blog/2015/01/13/a-new-data-processing-workflow-for-r-dplyr-magrittr-tidyr-ggplot2/) (newer)
+    - [Fetching BigQuery Data](http://dtkaplan.github.io/CVC/Data/Birthdays/Birthdays.html)
+
+
 #### Example Analyses
 
 - [NOAA Storm Data - a Brief Analysis of Impact on Health and Economy](http://rstudio-pubs-static.s3.amazonaws.com/25871_1ffdd88781bd4e6194d93fd327a25659.html)
 - [dplyr example with fish data](http://rpubs.com/dogle/31773) (more on [Introductory Fisheries Analysis with R | fishR](https://fishr.wordpress.com/ifar/))
 - [rnoaa - Access to NOAA National Climatic Data Center data](https://ropensci.org/blog/2014/03/13/rnoaa/)
+
