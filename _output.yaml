@@ -3,11 +3,11 @@ html_document:
   highlight: textmate
   theme: cosmo                                         # https://bootswatch.com/cosmo/
   css: 
-    - _includes/libs/font-awesome-4.5.0/css/font-awesome.min.css # http://fortawesome.github.io/Font-Awesome/icons/
-    - _includes/libs/octicons-3.3.0/octicons.css                 # https://octicons.github.com/
-    - _includes/styles/styles.css
-    - _includes/styles/agency.css
+    - includes/libs/font-awesome-4.5.0/css/font-awesome.min.css # http://fortawesome.github.io/Font-Awesome/icons/
+    - includes/libs/octicons-3.3.0/octicons.css                 # https://octicons.github.com/
+    - includes/styles/styles.css
+    - includes/styles/agency.css
   includes:
-    in_header:   _includes/in_header.html
-    before_body: _includes/before_body.html
-    after_body:  _includes/after_body.html
+    in_header:   includes/in_header.html
+    before_body: includes/before_body.html
+    after_body:  includes/after_body.html
