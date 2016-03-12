@@ -3,11 +3,7 @@ title: "Data wrangling with dplyr and tidyr"
 author: "Tyler Clavelle & Dan Ovando"
 date: "February 27, 2016"
 output:
-  html_document:
-    theme: spacelab
-    toc: yes
-  pdf_document:
-    toc: yes
+  output: md_document
 ---
 
 ## Overview  
