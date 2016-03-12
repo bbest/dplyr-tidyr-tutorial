@@ -1,0 +1,264 @@
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+
+<meta charset="utf-8">
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="generator" content="pandoc" />
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+<meta name="author" content="Ben Best" />
+
+<meta name="date" content="2016-03-11" />
+
+<title>test</title>
+
+<script src="test_files/jquery-1.11.3/jquery.min.js"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link href="test_files/bootstrap-3.3.5/css/cosmo.min.css" rel="stylesheet" />
+<script src="test_files/bootstrap-3.3.5/js/bootstrap.min.js"></script>
+<script src="test_files/bootstrap-3.3.5/shim/html5shiv.min.js"></script>
+<script src="test_files/bootstrap-3.3.5/shim/respond.min.js"></script>
+
+<!-- toc: table of contents -->
+<link href="_includes/libs/tocify-1.9.1/jquery.tocify.css" rel="stylesheet">
+<script src="_includes/libs/tocify-1.9.1/jquery-ui-1.9.2.custom.min.js"></script>
+<script src="_includes/libs/tocify-1.9.1/jquery.tocify.min.js"></script>
+
+<!-- Custom Fonts for agency.css eco-data-science -->
+<link href='https://fonts.googleapis.com/css?family=Kaushan+Script' rel='stylesheet' type='text/css'>
+<link href="https://fonts.googleapis.com/css?family=Montserrat:400,700" rel="stylesheet" type="text/css">
+
+<!-- toc: table of contents -->
+<style type="text/css">
+@media (max-width: 992px) {
+#toc {
+  position: relative;
+  width: 100%;
+  margin: 0px 0px 20px 0px;
+}
+}
+</style>
+
+<style type="text/css">code{white-space: pre;}</style>
+<link rel="stylesheet"
+      href="test_files/highlight/textmate.css"
+      type="text/css" />
+<script src="test_files/highlight/highlight.js"></script>
+<style type="text/css">
+  pre:not([class]) {
+    background-color: white;
+  }
+</style>
+<script type="text/javascript">
+if (window.hljs && document.readyState && document.readyState === "complete") {
+   window.setTimeout(function() {
+      hljs.initHighlighting();
+   }, 0);
+}
+</script>
+
+
+
+<link rel="stylesheet" href="_includes/libs/font-awesome-4.5.0/css/font-awesome.min.css" type="text/css" />
+<link rel="stylesheet" href="_includes/libs/octicons-3.3.0/octicons.css" type="text/css" />
+<link rel="stylesheet" href="_includes/styles/styles.css" type="text/css" />
+<link rel="stylesheet" href="_includes/styles/agency.css" type="text/css" />
+<link rel="stylesheet" href="_includes/styles/swc-print.css" type="text/css" />
+
+</head>
+
+<body>
+
+<style type = "text/css">
+.main-container {
+  max-width: 940px;
+  margin-left: auto;
+  margin-right: auto;
+}
+code {
+  color: inherit;
+  background-color: rgba(0, 0, 0, 0.04);
+}
+img {
+  max-width:100%;
+  height: auto;
+}
+h1 {
+  font-size: 34px;
+}
+h1.title {
+  font-size: 38px;
+}
+h2 {
+  font-size: 30px;
+}
+h3 {
+  font-size: 24px;
+}
+h4 {
+  font-size: 18px;
+}
+h5 {
+  font-size: 16px;
+}
+h6 {
+  font-size: 12px;
+}
+.tabbed-pane {
+  padding-top: 12px;
+}
+button.code-folding-btn:focus {
+  outline: none;
+}
+</style>
+
+
+<div class="container-fluid main-container">
+
+<!-- tabsets -->
+<script src="test_files/navigation-1.0/tabsets.js"></script>
+<script>
+$(document).ready(function () {
+  window.buildTabsets("TOC");
+});
+</script>
+
+<!-- code folding -->
+
+
+
+
+
+<div class="row-fluid">
+<div class="navbar navbar-default navbar-fixed-top navbar-transparent">
+  <div class="container">
+    <div class="navbar-header">
+      <a class="navbar-brand page-scroll" href="http://eco-data-science.github.io">eco-data-science</a>
+    </div>
+    <div class="navbar-collapse collapse" id="navbar-main">
+    </div>
+  </div>
+</div>
+</div>
+
+<div class="row-fluid">
+  <div class="span3 col-md-3">
+    <div id="toc"></div>
+  </div>
+  <div class="main-content span9 col-md-9">
+
+<div class="fluid-row" id="header">
+
+
+<h1 class="title">test</h1>
+<h4 class="author"><em>Ben Best</em></h4>
+<h4 class="date"><em>March 11, 2016</em></h4>
+
+</div>
+
+
+<blockquote>
+<h2 id="learning-objectives" class="objectives">Learning Objectives</h2>
+<ul>
+<li>To be able to subset vectors, factors, matrices, lists, and data frames</li>
+<li>To be able to extract individual and multiple elements:
+<ul>
+<li>by index,</li>
+<li>by name,</li>
+<li>using comparison operations</li>
+</ul></li>
+<li>To be able to skip and remove elements from various data structures.</li>
+</ul>
+</blockquote>
+<section class="objectives panel panel-warning">
+<div class="panel-heading">
+<span class="glyphicon glyphicon-certificate"></span> Learning Objectives
+</div>
+<div class="panel-body">
+<ul>
+<li>To be able to subset vectors, factors, matrices, lists, and data frames</li>
+<li>To be able to extract individual and multiple elements:
+<ul>
+<li>by index,</li>
+<li>by name,</li>
+<li>using comparison operations</li>
+</ul></li>
+<li>To be able to skip and remove elements from various data structures.
+</div>
+</section></li>
+</ul>
+<div id="r-markdown" class="section level2">
+<h2>R Markdown</h2>
+<p><span class="octicon octicon-alert"></span> <i class="fa fa-bluetooth"></i></p>
+<p>This is an R Markdown document. Markdown is a simple formatting syntax for authoring HTML, PDF, and MS Word documents. For more details on using R Markdown see <a href="http://rmarkdown.rstudio.com" class="uri">http://rmarkdown.rstudio.com</a>.</p>
+<p>When you click the <strong>Knit</strong> button a document will be generated that includes both content as well as the output of any embedded R code chunks within the document. You can embed an R code chunk like this:</p>
+<pre class="r"><code>summary(cars)</code></pre>
+<pre><code>##      speed           dist       
+##  Min.   : 4.0   Min.   :  2.00  
+##  1st Qu.:12.0   1st Qu.: 26.00  
+##  Median :15.0   Median : 36.00  
+##  Mean   :15.4   Mean   : 42.98  
+##  3rd Qu.:19.0   3rd Qu.: 56.00  
+##  Max.   :25.0   Max.   :120.00</code></pre>
+</div>
+<div id="including-plots" class="section level2">
+<h2>Including Plots</h2>
+<p>You can also embed plots, for example:</p>
+<p><img src="test_files/figure-html/pressure-1.png" title="" alt="" width="672" /></p>
+<p>Note that the <code>echo = FALSE</code> parameter was added to the code chunk to prevent printing of the R code that generated the plot.</p>
+</div>
+
+  </div> <!--span-9-->
+</div> <!--row-fluid-->
+
+<style type="text/css">
+.main-container {
+  max-width: none;
+}
+</style>
+
+<script>
+$(function() {
+    var toc = $("#toc").tocify({
+      selectors: "h2,h3",
+      theme: "bootstrap3",
+      context: '.main-content',
+      hashGenerator: 'pretty',
+      showAndHide: false
+    }).data("toc-tocify");
+    $(".optionName").popover({ trigger: "hover" });
+});
+</script>
+
+<div style="color:gray; text-align: right;" >
+  <span class="octicon octicon-repo-forked"></span> <b>Fork</b> me at <a href="http://github.com/ucsb-bren/env-info">github.com/<b>ucsb-bren/env-info</b></a>
+</div>
+
+
+
+</div>
+
+<script>
+
+// add bootstrap table styles to pandoc tables
+$(document).ready(function () {
+  $('tr.header').parent('thead').parent('table').addClass('table table-condensed');
+});
+
+</script>
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>

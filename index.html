@@ -1,0 +1,2156 @@
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+
+<meta charset="utf-8">
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="generator" content="pandoc" />
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+<meta name="author" content="Tyler Clavelle &amp; Dan Ovando" />
+
+<meta name="date" content="2016-03-11" />
+
+<title>Data wrangling with dplyr and tidyr</title>
+
+<script src="index_files/jquery-1.11.3/jquery.min.js"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link href="index_files/bootstrap-3.3.5/css/cosmo.min.css" rel="stylesheet" />
+<script src="index_files/bootstrap-3.3.5/js/bootstrap.min.js"></script>
+<script src="index_files/bootstrap-3.3.5/shim/html5shiv.min.js"></script>
+<script src="index_files/bootstrap-3.3.5/shim/respond.min.js"></script>
+
+<!-- toc: table of contents -->
+<link href="_includes/libs/tocify-1.9.1/jquery.tocify.css" rel="stylesheet">
+<script src="_includes/libs/tocify-1.9.1/jquery-ui-1.9.2.custom.min.js"></script>
+<script src="_includes/libs/tocify-1.9.1/jquery.tocify.min.js"></script>
+
+<!-- Custom Fonts for agency.css eco-data-science -->
+<link href='https://fonts.googleapis.com/css?family=Kaushan+Script' rel='stylesheet' type='text/css'>
+<link href="https://fonts.googleapis.com/css?family=Montserrat:400,700" rel="stylesheet" type="text/css">
+
+<!-- toc: table of contents -->
+<style type="text/css">
+@media (max-width: 992px) {
+#toc {
+  position: relative;
+  width: 100%;
+  margin: 0px 0px 20px 0px;
+}
+}
+</style>
+
+<style type="text/css">code{white-space: pre;}</style>
+<link rel="stylesheet"
+      href="index_files/highlight/textmate.css"
+      type="text/css" />
+<script src="index_files/highlight/highlight.js"></script>
+<style type="text/css">
+  pre:not([class]) {
+    background-color: white;
+  }
+</style>
+<script type="text/javascript">
+if (window.hljs && document.readyState && document.readyState === "complete") {
+   window.setTimeout(function() {
+      hljs.initHighlighting();
+   }, 0);
+}
+</script>
+
+
+
+<link rel="stylesheet" href="_includes/libs/font-awesome-4.5.0/css/font-awesome.min.css" type="text/css" />
+<link rel="stylesheet" href="_includes/libs/octicons-3.3.0/octicons.css" type="text/css" />
+<link rel="stylesheet" href="_includes/styles/styles.css" type="text/css" />
+<link rel="stylesheet" href="_includes/styles/agency.css" type="text/css" />
+
+</head>
+
+<body>
+
+<style type = "text/css">
+.main-container {
+  max-width: 940px;
+  margin-left: auto;
+  margin-right: auto;
+}
+code {
+  color: inherit;
+  background-color: rgba(0, 0, 0, 0.04);
+}
+img {
+  max-width:100%;
+  height: auto;
+}
+h1 {
+  font-size: 34px;
+}
+h1.title {
+  font-size: 38px;
+}
+h2 {
+  font-size: 30px;
+}
+h3 {
+  font-size: 24px;
+}
+h4 {
+  font-size: 18px;
+}
+h5 {
+  font-size: 16px;
+}
+h6 {
+  font-size: 12px;
+}
+.tabbed-pane {
+  padding-top: 12px;
+}
+button.code-folding-btn:focus {
+  outline: none;
+}
+</style>
+
+
+<div class="container-fluid main-container">
+
+<!-- tabsets -->
+<script src="index_files/navigation-1.0/tabsets.js"></script>
+<script>
+$(document).ready(function () {
+  window.buildTabsets("TOC");
+});
+</script>
+
+<!-- code folding -->
+
+
+
+
+
+<div class="row-fluid">
+<div class="navbar navbar-default navbar-fixed-top navbar-transparent">
+  <div class="container">
+    <div class="navbar-header">
+      <a class="navbar-brand page-scroll" href="http://eco-data-science.github.io">eco-data-science</a>
+    </div>
+    <div class="navbar-collapse collapse" id="navbar-main">
+    </div>
+  </div>
+</div>
+</div>
+
+<div class="row-fluid">
+  <div class="span3 col-md-3">
+    <div id="toc"></div>
+  </div>
+  <div class="main-content span9 col-md-9">
+
+<div class="fluid-row" id="header">
+
+
+<h1 class="title">Data wrangling with dplyr and tidyr</h1>
+<h4 class="author"><em>Tyler Clavelle &amp; Dan Ovando</em></h4>
+<h4 class="date"><em>2016-03-11</em></h4>
+
+</div>
+
+
+<div id="overview" class="section level2">
+<h2>Overview</h2>
+<blockquote>
+<p>Data scientists, according to interviews and expert estimates, spend from 50 percent to 80 percent of their time mired in the mundane labor of collecting and preparing data, before it can be explored for useful information. - <a href="http://www.nytimes.com/2014/08/18/technology/for-big-data-scientists-hurdle-to-insights-is-janitor-work.html">NYTimes (2014)</a></p>
+</blockquote>
+<p>This tutorial will cover the <code>tidyr</code> and <code>dplyr</code> packages created by the mythical code wizard <a href="https://github.com/hadley">Hadley Wickham</a> of <code>ggplot2</code> fame. The “gg” in <code>ggplot2</code> stands for the “grammar of graphics”. Hadley similarly considers the functionality of the two packages <code>dplyr</code> and <code>tidyr</code> to provide the “grammar of data manipulation”.</p>
+<div id="getting-started" class="section level3">
+<h3>Getting Started</h3>
+<p>You can <a href="https://www.rstudio.com/products/rstudio/download/">download RStudio</a> if you don’t have latest version <code>0.99.892</code> (menu RStudio -&gt; About RStudio), which has many nice additions for running R chunks and providing table of contents in Rmarkdown documents.</p>
+<p>Install and/or load the following packages:</p>
+<pre class="r"><code>## Install packages if needed
+# install.packages(&#39;devtools&#39;)
+# install.packages(&#39;readr&#39;)
+# install.packages(&#39;dplyr&#39;)
+# install.packages(&#39;plyr&#39;)
+# install.packages(&#39;tidyr&#39;)
+# install.packages(&#39;stringr&#39;)
+# install.packages(&#39;ggplot2&#39;)
+
+# Load packages
+suppressPackageStartupMessages({
+  library(devtools)
+  library(readr)
+  library(dplyr)
+  library(broom)
+  library(tidyr)
+  library(stringr)
+  library(ggplot2)
+})</code></pre>
+<pre><code>## Warning: package &#39;ggplot2&#39; was built under R version 3.2.4</code></pre>
+<pre class="r"><code># Check package versions after Packages pane -&gt; Update
+devtools::session_info()</code></pre>
+<pre><code>## Session info --------------------------------------------------------------</code></pre>
+<pre><code>##  setting  value                       
+##  version  R version 3.2.3 (2015-12-10)
+##  system   x86_64, darwin13.4.0        
+##  ui       X11                         
+##  language (EN)                        
+##  collate  en_US.UTF-8                 
+##  tz       America/Los_Angeles         
+##  date     2016-03-11</code></pre>
+<pre><code>## Packages ------------------------------------------------------------------</code></pre>
+<pre><code>##  package    * version date       source        
+##  assertthat   0.1     2013-12-06 CRAN (R 3.2.0)
+##  broom      * 0.4.0   2015-11-30 CRAN (R 3.2.3)
+##  colorspace   1.2-6   2015-03-11 CRAN (R 3.2.0)
+##  DBI          0.3.1   2014-09-24 CRAN (R 3.2.0)
+##  devtools   * 1.10.0  2016-01-23 CRAN (R 3.2.3)
+##  digest       0.6.9   2016-01-08 CRAN (R 3.2.3)
+##  dplyr      * 0.4.3   2015-09-01 CRAN (R 3.2.0)
+##  evaluate     0.8.3   2016-03-05 CRAN (R 3.2.4)
+##  formatR      1.3     2016-03-05 CRAN (R 3.2.3)
+##  ggplot2    * 2.1.0   2016-03-01 CRAN (R 3.2.4)
+##  gtable       0.2.0   2016-02-26 CRAN (R 3.2.3)
+##  htmltools    0.3     2015-12-29 CRAN (R 3.2.3)
+##  knitr        1.12.3  2016-01-22 CRAN (R 3.2.3)
+##  lattice      0.20-33 2015-07-14 CRAN (R 3.2.3)
+##  magrittr     1.5     2014-11-22 CRAN (R 3.2.0)
+##  memoise      1.0.0   2016-01-29 CRAN (R 3.2.3)
+##  mnormt       1.5-3   2015-05-25 CRAN (R 3.2.0)
+##  munsell      0.4.3   2016-02-13 CRAN (R 3.2.3)
+##  nlme         3.1-125 2016-02-27 CRAN (R 3.2.3)
+##  plyr         1.8.3   2015-06-12 CRAN (R 3.2.0)
+##  psych        1.5.8   2015-08-30 CRAN (R 3.2.0)
+##  R6           2.1.2   2016-01-26 CRAN (R 3.2.3)
+##  Rcpp         0.12.3  2016-01-10 CRAN (R 3.2.3)
+##  readr      * 0.2.2   2015-10-22 CRAN (R 3.2.0)
+##  reshape2     1.4.1   2014-12-06 CRAN (R 3.2.0)
+##  rmarkdown    0.9.5   2016-02-22 CRAN (R 3.2.3)
+##  scales       0.4.0   2016-02-26 CRAN (R 3.2.3)
+##  stringi      1.0-1   2015-10-22 CRAN (R 3.2.0)
+##  stringr    * 1.0.0   2015-04-30 CRAN (R 3.2.0)
+##  tidyr      * 0.4.1   2016-02-05 CRAN (R 3.2.3)
+##  yaml         2.1.13  2014-06-12 CRAN (R 3.2.0)</code></pre>
+</div>
+<div id="why-use-dplyr-and-tidyr" class="section level3">
+<h3>Why use dplyr and tidyr?</h3>
+<ol style="list-style-type: decimal">
+<li><strong>Speed</strong> - dplyr and tidyr are <em>really</em> fast<br />
+</li>
+<li><strong>Readability</strong> - the code syntax is straightforward and easy to read<br />
+</li>
+<li><strong>Chaining</strong> - <em>never break the chain</em>. More on this later<br />
+</li>
+<li><strong>Integrates with ggplot2</strong> - plot your data in the same workflow that you manipulate it with</li>
+<li><strong>Can be used to analyze external databases without knowledge of additional database query languages</strong></li>
+</ol>
+</div>
+</div>
+<div id="basics-of-dplyr-and-tidyr" class="section level2">
+<h2>Basics of dplyr and tidyr</h2>
+<div id="data-frames-and-data-tables" class="section level3">
+<h3>Data frames and data tables</h3>
+<p>Although technically two separate packages, <strong>dplyr</strong> and <strong>tidyr</strong> were designed to work together and can basically be thought of as a single package. They are designed to work with data frames as is, but it is generally a good idea to convert your data to table data using the <code>read_csv()</code> or <code>tbl_df()</code> functions, particularly when working with large datasets.</p>
+<pre class="r"><code>## Comparing read.csv with read_csv
+# Read in FAO data
+fao   &lt;- read.csv(file = &#39;data/FAO_1950to2012_111914.csv&#39;, stringsAsFactors = F) 
+summary(fao)</code></pre>
+<pre><code>##  Country..Country.  Species..ASFIS.species. Species..ISSCAAP.group.
+##  Length:17692       Length:17692            Min.   :11.00          
+##  Class :character   Class :character        1st Qu.:33.00          
+##  Mode  :character   Mode  :character        Median :36.00          
+##                                             Mean   :37.38          
+##                                             3rd Qu.:38.00          
+##                                             Max.   :77.00          
+##  Species..ISSCAAP.group..1 Species..ASFIS.species..1
+##  Length:17692              Length:17692             
+##  Class :character          Class :character         
+##  Mode  :character          Mode  :character         
+##                                                     
+##                                                     
+##                                                     
+##  Species..ASFIS.species..2 Fishing.area..FAO.major.fishing.area.
+##  Length:17692              Min.   :18.00                        
+##  Class :character          1st Qu.:31.00                        
+##  Mode  :character          Median :37.00                        
+##                            Mean   :45.34                        
+##                            3rd Qu.:57.00                        
+##                            Max.   :88.00                        
+##  Measure..Measure.     X1950              X1951          
+##  Length:17692       Length:17692       Length:17692      
+##  Class :character   Class :character   Class :character  
+##  Mode  :character   Mode  :character   Mode  :character  
+##                                                          
+##                                                          
+##                                                          
+##     X1952              X1953              X1954          
+##  Length:17692       Length:17692       Length:17692      
+##  Class :character   Class :character   Class :character  
+##  Mode  :character   Mode  :character   Mode  :character  
+##                                                          
+##                                                          
+##                                                          
+##     X1955              X1956              X1957          
+##  Length:17692       Length:17692       Length:17692      
+##  Class :character   Class :character   Class :character  
+##  Mode  :character   Mode  :character   Mode  :character  
+##                                                          
+##                                                          
+##                                                          
+##     X1958              X1959              X1960          
+##  Length:17692       Length:17692       Length:17692      
+##  Class :character   Class :character   Class :character  
+##  Mode  :character   Mode  :character   Mode  :character  
+##                                                          
+##                                                          
+##                                                          
+##     X1961              X1962              X1963          
+##  Length:17692       Length:17692       Length:17692      
+##  Class :character   Class :character   Class :character  
+##  Mode  :character   Mode  :character   Mode  :character  
+##                                                          
+##                                                          
+##                                                          
+##     X1964              X1965              X1966          
+##  Length:17692       Length:17692       Length:17692      
+##  Class :character   Class :character   Class :character  
+##  Mode  :character   Mode  :character   Mode  :character  
+##                                                          
+##                                                          
+##                                                          
+##     X1967              X1968              X1969          
+##  Length:17692       Length:17692       Length:17692      
+##  Class :character   Class :character   Class :character  
+##  Mode  :character   Mode  :character   Mode  :character  
+##                                                          
+##                                                          
+##                                                          
+##     X1970              X1971              X1972          
+##  Length:17692       Length:17692       Length:17692      
+##  Class :character   Class :character   Class :character  
+##  Mode  :character   Mode  :character   Mode  :character  
+##                                                          
+##                                                          
+##                                                          
+##     X1973              X1974              X1975          
+##  Length:17692       Length:17692       Length:17692      
+##  Class :character   Class :character   Class :character  
+##  Mode  :character   Mode  :character   Mode  :character  
+##                                                          
+##                                                          
+##                                                          
+##     X1976              X1977              X1978          
+##  Length:17692       Length:17692       Length:17692      
+##  Class :character   Class :character   Class :character  
+##  Mode  :character   Mode  :character   Mode  :character  
+##                                                          
+##                                                          
+##                                                          
+##     X1979              X1980              X1981          
+##  Length:17692       Length:17692       Length:17692      
+##  Class :character   Class :character   Class :character  
+##  Mode  :character   Mode  :character   Mode  :character  
+##                                                          
+##                                                          
+##                                                          
+##     X1982              X1983              X1984          
+##  Length:17692       Length:17692       Length:17692      
+##  Class :character   Class :character   Class :character  
+##  Mode  :character   Mode  :character   Mode  :character  
+##                                                          
+##                                                          
+##                                                          
+##     X1985              X1986              X1987          
+##  Length:17692       Length:17692       Length:17692      
+##  Class :character   Class :character   Class :character  
+##  Mode  :character   Mode  :character   Mode  :character  
+##                                                          
+##                                                          
+##                                                          
+##     X1988              X1989              X1990          
+##  Length:17692       Length:17692       Length:17692      
+##  Class :character   Class :character   Class :character  
+##  Mode  :character   Mode  :character   Mode  :character  
+##                                                          
+##                                                          
+##                                                          
+##     X1991              X1992              X1993          
+##  Length:17692       Length:17692       Length:17692      
+##  Class :character   Class :character   Class :character  
+##  Mode  :character   Mode  :character   Mode  :character  
+##                                                          
+##                                                          
+##                                                          
+##     X1994              X1995              X1996          
+##  Length:17692       Length:17692       Length:17692      
+##  Class :character   Class :character   Class :character  
+##  Mode  :character   Mode  :character   Mode  :character  
+##                                                          
+##                                                          
+##                                                          
+##     X1997              X1998              X1999          
+##  Length:17692       Length:17692       Length:17692      
+##  Class :character   Class :character   Class :character  
+##  Mode  :character   Mode  :character   Mode  :character  
+##                                                          
+##                                                          
+##                                                          
+##     X2000              X2001              X2002          
+##  Length:17692       Length:17692       Length:17692      
+##  Class :character   Class :character   Class :character  
+##  Mode  :character   Mode  :character   Mode  :character  
+##                                                          
+##                                                          
+##                                                          
+##     X2003              X2004              X2005          
+##  Length:17692       Length:17692       Length:17692      
+##  Class :character   Class :character   Class :character  
+##  Mode  :character   Mode  :character   Mode  :character  
+##                                                          
+##                                                          
+##                                                          
+##     X2006              X2007              X2008          
+##  Length:17692       Length:17692       Length:17692      
+##  Class :character   Class :character   Class :character  
+##  Mode  :character   Mode  :character   Mode  :character  
+##                                                          
+##                                                          
+##                                                          
+##     X2009              X2010              X2011          
+##  Length:17692       Length:17692       Length:17692      
+##  Class :character   Class :character   Class :character  
+##  Mode  :character   Mode  :character   Mode  :character  
+##                                                          
+##                                                          
+##                                                          
+##     X2012          
+##  Length:17692      
+##  Class :character  
+##  Mode  :character  
+##                    
+##                    
+## </code></pre>
+<pre class="r"><code>head(fao)</code></pre>
+<pre><code>##   Country..Country.      Species..ASFIS.species. Species..ISSCAAP.group.
+## 1           Albania Angelsharks, sand devils nei                      38
+## 2           Albania              Atlantic bonito                      36
+## 3           Albania               Barracudas nei                      37
+## 4           Albania          Blue and red shrimp                      45
+## 5           Albania     Blue whiting(=Poutassou)                      32
+## 6           Albania                     Bluefish                      37
+##      Species..ISSCAAP.group..1 Species..ASFIS.species..1
+## 1      Sharks, rays, chimaeras                10903XXXXX
+## 2   Tunas, bonitos, billfishes                1750100101
+## 3 Miscellaneous pelagic fishes                17710001XX
+## 4              Shrimps, prawns                2280203101
+## 5        Cods, hakes, haddocks                1480403301
+## 6 Miscellaneous pelagic fishes                1702021301
+##   Species..ASFIS.species..2 Fishing.area..FAO.major.fishing.area.
+## 1               Squatinidae                                    37
+## 2               Sarda sarda                                    37
+## 3             Sphyraena spp                                    37
+## 4       Aristeus antennatus                                    37
+## 5  Micromesistius poutassou                                    37
+## 6       Pomatomus saltatrix                                    37
+##   Measure..Measure. X1950 X1951 X1952 X1953 X1954 X1955 X1956 X1957 X1958
+## 1 Quantity (tonnes)   ...   ...   ...   ...   ...   ...   ...   ...   ...
+## 2 Quantity (tonnes)   ...   ...   ...   ...   ...   ...   ...   ...   ...
+## 3 Quantity (tonnes)   ...   ...   ...   ...   ...   ...   ...   ...   ...
+## 4 Quantity (tonnes)   ...   ...   ...   ...   ...   ...   ...   ...   ...
+## 5 Quantity (tonnes)   ...   ...   ...   ...   ...   ...   ...   ...   ...
+## 6 Quantity (tonnes)   ...   ...   ...   ...   ...   ...   ...   ...   ...
+##   X1959 X1960 X1961 X1962 X1963 X1964 X1965 X1966 X1967 X1968 X1969 X1970
+## 1   ...   ...   ...   ...   ...   ...   ...   ...   ...   ...   ...   ...
+## 2   ...   ...   ...   ...   ...   ...   ...   ...   ...   ...   ...   ...
+## 3   ...   ...   ...   ...   ...   ...   ...   ...   ...   ...   ...   ...
+## 4   ...   ...   ...   ...   ...   ...   ...   ...   ...   ...   ...   ...
+## 5   ...   ...   ...   ...   ...   ...   ...   ...   ...   ...   ...   ...
+## 6   ...   ...   ...   ...   ...   ...   ...   ...   ...   ...   ...   ...
+##   X1971 X1972 X1973 X1974 X1975 X1976 X1977 X1978 X1979 X1980 X1981 X1982
+## 1   ...   ...   ...   ...   ...   ...   ...   ...   ...   ...   ...   ...
+## 2   ...   ...   ...   ...   ...   ...   ...   ...   ...   ...   ...   ...
+## 3   ...   ...   ...   ...   ...   ...   ...   ...   ...   ...   ...   ...
+## 4   ...   ...   ...   ...   ...   ...   ...   ...   ...   ...   ...   ...
+## 5   ...   ...   ...   ...   ...   ...   ...   ...   ...   ...   ...   ...
+## 6   ...   ...   ...   ...   ...   ...   ...   ...   ...   ...   ...   ...
+##   X1983 X1984 X1985 X1986 X1987 X1988 X1989 X1990 X1991 X1992 X1993 X1994
+## 1   ...   ...   ...   ...   ...   ...   ...   ...   ...   ...   ...   ...
+## 2   ...   ...   ...   ...   ...   ...   ...   ...   ...   ...   ...   ...
+## 3   ...   ...   ...   ...   ...   ...   ...   ...   ...   ...   ...   ...
+## 4   ...   ...   ...   ...   ...   ...   ...   ...   ...   ...   ...   ...
+## 5   ...   ...   ...   ...   ...   ...   ...   ...   ...   ...   ...   ...
+## 6   ...   ...   ...   ...   ...   ...   ...   ...   ...   ...   ...   ...
+##   X1995 X1996 X1997 X1998 X1999 X2000 X2001 X2002 X2003 X2004 X2005 X2006
+## 1   0 0    53    20    31    30    30    16    79     1     4    68    55
+## 2     1     2   0 0    12    30    25    30    24     4     2    23    30
+## 3   ...   ...   ...   ...   ...     2   ...   ...   ...     2     4     7
+## 4   0 0     3   0 0     -     -     -     -    34    22    15    12    18
+## 5   0 0     2   0 0     -     -     -     -     6   ...     1     5     8
+## 6   ...   ...   ...   ...   ...   ...   ...   ...   ...     2     6     9
+##   X2007 X2008 X2009 X2010 X2011 X2012
+## 1    12    23    14    78    12     5
+## 2    19    27    21    23    12     5
+## 3   ...   ...   ...     7   ...   ...
+## 4   ...   ...   ...   ...   ...   ...
+## 5     -     -     -     -     -     -
+## 6     -     -     -     -     -     -</code></pre>
+<pre class="r"><code># vs using read_csv
+fao   &lt;- read_csv(file = &#39;data/FAO_1950to2012_111914.csv&#39;) 
+fao</code></pre>
+<pre><code>## Source: local data frame [17,692 x 71]
+## 
+##    Country (Country)      Species (ASFIS species) Species (ISSCAAP group)
+##                (chr)                        (chr)                   (int)
+## 1            Albania Angelsharks, sand devils nei                      38
+## 2            Albania              Atlantic bonito                      36
+## 3            Albania               Barracudas nei                      37
+## 4            Albania          Blue and red shrimp                      45
+## 5            Albania     Blue whiting(=Poutassou)                      32
+## 6            Albania                     Bluefish                      37
+## 7            Albania                        Bogue                      33
+## 8            Albania               Caramote prawn                      45
+## 9            Albania   Catsharks, nursehounds nei                      38
+## 10           Albania            Common cuttlefish                      57
+## ..               ...                          ...                     ...
+## Variables not shown: Species (ISSCAAP group) (chr), Species (ASFIS
+##   species) (chr), Species (ASFIS species) (chr), Fishing area (FAO major
+##   fishing area) (int), Measure (Measure) (chr), 1950 (chr), 1951 (chr),
+##   1952 (chr), 1953 (chr), 1954 (chr), 1955 (chr), 1956 (chr), 1957 (chr),
+##   1958 (chr), 1959 (chr), 1960 (chr), 1961 (chr), 1962 (chr), 1963 (chr),
+##   1964 (chr), 1965 (chr), 1966 (chr), 1967 (chr), 1968 (chr), 1969 (chr),
+##   1970 (chr), 1971 (chr), 1972 (chr), 1973 (chr), 1974 (chr), 1975 (chr),
+##   1976 (chr), 1977 (chr), 1978 (chr), 1979 (chr), 1980 (chr), 1981 (chr),
+##   1982 (chr), 1983 (chr), 1984 (chr), 1985 (chr), 1986 (chr), 1987 (chr),
+##   1988 (chr), 1989 (chr), 1990 (chr), 1991 (chr), 1992 (chr), 1993 (chr),
+##   1994 (chr), 1995 (chr), 1996 (chr), 1997 (chr), 1998 (chr), 1999 (chr),
+##   2000 (chr), 2001 (chr), 2002 (chr), 2003 (chr), 2004 (chr), 2005 (chr),
+##   2006 (chr), 2007 (chr), 2008 (chr), 2009 (chr), 2010 (chr), 2011 (chr),
+##   2012 (chr)</code></pre>
+<pre class="r"><code># note: read_csv like read.csv(...)
+#       also keeps original column names and converts to tbl_df()
+names(fao) = make.names(names(fao), unique=T) # since original column names have duplicates
+
+## Consider what happens with the following command
+# fao # all entries are printed in your console
+head(fao) # top five entries are printed in your console, columns wrap and can be difficult to follow if working with many variables</code></pre>
+<pre><code>## Source: local data frame [6 x 71]
+## 
+##   Country..Country.      Species..ASFIS.species. Species..ISSCAAP.group.
+##               (chr)                        (chr)                   (int)
+## 1           Albania Angelsharks, sand devils nei                      38
+## 2           Albania              Atlantic bonito                      36
+## 3           Albania               Barracudas nei                      37
+## 4           Albania          Blue and red shrimp                      45
+## 5           Albania     Blue whiting(=Poutassou)                      32
+## 6           Albania                     Bluefish                      37
+## Variables not shown: Species..ISSCAAP.group..1 (chr),
+##   Species..ASFIS.species..1 (chr), Species..ASFIS.species..2 (chr),
+##   Fishing.area..FAO.major.fishing.area. (int), Measure..Measure. (chr),
+##   X1950 (chr), X1951 (chr), X1952 (chr), X1953 (chr), X1954 (chr), X1955
+##   (chr), X1956 (chr), X1957 (chr), X1958 (chr), X1959 (chr), X1960 (chr),
+##   X1961 (chr), X1962 (chr), X1963 (chr), X1964 (chr), X1965 (chr), X1966
+##   (chr), X1967 (chr), X1968 (chr), X1969 (chr), X1970 (chr), X1971 (chr),
+##   X1972 (chr), X1973 (chr), X1974 (chr), X1975 (chr), X1976 (chr), X1977
+##   (chr), X1978 (chr), X1979 (chr), X1980 (chr), X1981 (chr), X1982 (chr),
+##   X1983 (chr), X1984 (chr), X1985 (chr), X1986 (chr), X1987 (chr), X1988
+##   (chr), X1989 (chr), X1990 (chr), X1991 (chr), X1992 (chr), X1993 (chr),
+##   X1994 (chr), X1995 (chr), X1996 (chr), X1997 (chr), X1998 (chr), X1999
+##   (chr), X2000 (chr), X2001 (chr), X2002 (chr), X2003 (chr), X2004 (chr),
+##   X2005 (chr), X2006 (chr), X2007 (chr), X2008 (chr), X2009 (chr), X2010
+##   (chr), X2011 (chr), X2012 (chr)</code></pre>
+<pre class="r"><code>summary(fao)</code></pre>
+<pre><code>##  Country..Country.  Species..ASFIS.species. Species..ISSCAAP.group.
+##  Length:17692       Length:17692            Min.   :11.00          
+##  Class :character   Class :character        1st Qu.:33.00          
+##  Mode  :character   Mode  :character        Median :36.00          
+##                                             Mean   :37.38          
+##                                             3rd Qu.:38.00          
+##                                             Max.   :77.00          
+##  Species..ISSCAAP.group..1 Species..ASFIS.species..1
+##  Length:17692              Length:17692             
+##  Class :character          Class :character         
+##  Mode  :character          Mode  :character         
+##                                                     
+##                                                     
+##                                                     
+##  Species..ASFIS.species..2 Fishing.area..FAO.major.fishing.area.
+##  Length:17692              Min.   :18.00                        
+##  Class :character          1st Qu.:31.00                        
+##  Mode  :character          Median :37.00                        
+##                            Mean   :45.34                        
+##                            3rd Qu.:57.00                        
+##                            Max.   :88.00                        
+##  Measure..Measure.     X1950              X1951          
+##  Length:17692       Length:17692       Length:17692      
+##  Class :character   Class :character   Class :character  
+##  Mode  :character   Mode  :character   Mode  :character  
+##                                                          
+##                                                          
+##                                                          
+##     X1952              X1953              X1954          
+##  Length:17692       Length:17692       Length:17692      
+##  Class :character   Class :character   Class :character  
+##  Mode  :character   Mode  :character   Mode  :character  
+##                                                          
+##                                                          
+##                                                          
+##     X1955              X1956              X1957          
+##  Length:17692       Length:17692       Length:17692      
+##  Class :character   Class :character   Class :character  
+##  Mode  :character   Mode  :character   Mode  :character  
+##                                                          
+##                                                          
+##                                                          
+##     X1958              X1959              X1960          
+##  Length:17692       Length:17692       Length:17692      
+##  Class :character   Class :character   Class :character  
+##  Mode  :character   Mode  :character   Mode  :character  
+##                                                          
+##                                                          
+##                                                          
+##     X1961              X1962              X1963          
+##  Length:17692       Length:17692       Length:17692      
+##  Class :character   Class :character   Class :character  
+##  Mode  :character   Mode  :character   Mode  :character  
+##                                                          
+##                                                          
+##                                                          
+##     X1964              X1965              X1966          
+##  Length:17692       Length:17692       Length:17692      
+##  Class :character   Class :character   Class :character  
+##  Mode  :character   Mode  :character   Mode  :character  
+##                                                          
+##                                                          
+##                                                          
+##     X1967              X1968              X1969          
+##  Length:17692       Length:17692       Length:17692      
+##  Class :character   Class :character   Class :character  
+##  Mode  :character   Mode  :character   Mode  :character  
+##                                                          
+##                                                          
+##                                                          
+##     X1970              X1971              X1972          
+##  Length:17692       Length:17692       Length:17692      
+##  Class :character   Class :character   Class :character  
+##  Mode  :character   Mode  :character   Mode  :character  
+##                                                          
+##                                                          
+##                                                          
+##     X1973              X1974              X1975          
+##  Length:17692       Length:17692       Length:17692      
+##  Class :character   Class :character   Class :character  
+##  Mode  :character   Mode  :character   Mode  :character  
+##                                                          
+##                                                          
+##                                                          
+##     X1976              X1977              X1978          
+##  Length:17692       Length:17692       Length:17692      
+##  Class :character   Class :character   Class :character  
+##  Mode  :character   Mode  :character   Mode  :character  
+##                                                          
+##                                                          
+##                                                          
+##     X1979              X1980              X1981          
+##  Length:17692       Length:17692       Length:17692      
+##  Class :character   Class :character   Class :character  
+##  Mode  :character   Mode  :character   Mode  :character  
+##                                                          
+##                                                          
+##                                                          
+##     X1982              X1983              X1984          
+##  Length:17692       Length:17692       Length:17692      
+##  Class :character   Class :character   Class :character  
+##  Mode  :character   Mode  :character   Mode  :character  
+##                                                          
+##                                                          
+##                                                          
+##     X1985              X1986              X1987          
+##  Length:17692       Length:17692       Length:17692      
+##  Class :character   Class :character   Class :character  
+##  Mode  :character   Mode  :character   Mode  :character  
+##                                                          
+##                                                          
+##                                                          
+##     X1988              X1989              X1990          
+##  Length:17692       Length:17692       Length:17692      
+##  Class :character   Class :character   Class :character  
+##  Mode  :character   Mode  :character   Mode  :character  
+##                                                          
+##                                                          
+##                                                          
+##     X1991              X1992              X1993          
+##  Length:17692       Length:17692       Length:17692      
+##  Class :character   Class :character   Class :character  
+##  Mode  :character   Mode  :character   Mode  :character  
+##                                                          
+##                                                          
+##                                                          
+##     X1994              X1995              X1996          
+##  Length:17692       Length:17692       Length:17692      
+##  Class :character   Class :character   Class :character  
+##  Mode  :character   Mode  :character   Mode  :character  
+##                                                          
+##                                                          
+##                                                          
+##     X1997              X1998              X1999          
+##  Length:17692       Length:17692       Length:17692      
+##  Class :character   Class :character   Class :character  
+##  Mode  :character   Mode  :character   Mode  :character  
+##                                                          
+##                                                          
+##                                                          
+##     X2000              X2001              X2002          
+##  Length:17692       Length:17692       Length:17692      
+##  Class :character   Class :character   Class :character  
+##  Mode  :character   Mode  :character   Mode  :character  
+##                                                          
+##                                                          
+##                                                          
+##     X2003              X2004              X2005          
+##  Length:17692       Length:17692       Length:17692      
+##  Class :character   Class :character   Class :character  
+##  Mode  :character   Mode  :character   Mode  :character  
+##                                                          
+##                                                          
+##                                                          
+##     X2006              X2007              X2008          
+##  Length:17692       Length:17692       Length:17692      
+##  Class :character   Class :character   Class :character  
+##  Mode  :character   Mode  :character   Mode  :character  
+##                                                          
+##                                                          
+##                                                          
+##     X2009              X2010              X2011          
+##  Length:17692       Length:17692       Length:17692      
+##  Class :character   Class :character   Class :character  
+##  Mode  :character   Mode  :character   Mode  :character  
+##                                                          
+##                                                          
+##                                                          
+##     X2012          
+##  Length:17692      
+##  Class :character  
+##  Mode  :character  
+##                    
+##                    
+## </code></pre>
+<pre class="r"><code>## With dplyr
+fao&lt;-tbl_df(fao) # convert to table data
+fao # now top 10 rows are shown along with data type of each variable. Variables that do not fit in console window are shown below.</code></pre>
+<pre><code>## Source: local data frame [17,692 x 71]
+## 
+##    Country..Country.      Species..ASFIS.species. Species..ISSCAAP.group.
+##                (chr)                        (chr)                   (int)
+## 1            Albania Angelsharks, sand devils nei                      38
+## 2            Albania              Atlantic bonito                      36
+## 3            Albania               Barracudas nei                      37
+## 4            Albania          Blue and red shrimp                      45
+## 5            Albania     Blue whiting(=Poutassou)                      32
+## 6            Albania                     Bluefish                      37
+## 7            Albania                        Bogue                      33
+## 8            Albania               Caramote prawn                      45
+## 9            Albania   Catsharks, nursehounds nei                      38
+## 10           Albania            Common cuttlefish                      57
+## ..               ...                          ...                     ...
+## Variables not shown: Species..ISSCAAP.group..1 (chr),
+##   Species..ASFIS.species..1 (chr), Species..ASFIS.species..2 (chr),
+##   Fishing.area..FAO.major.fishing.area. (int), Measure..Measure. (chr),
+##   X1950 (chr), X1951 (chr), X1952 (chr), X1953 (chr), X1954 (chr), X1955
+##   (chr), X1956 (chr), X1957 (chr), X1958 (chr), X1959 (chr), X1960 (chr),
+##   X1961 (chr), X1962 (chr), X1963 (chr), X1964 (chr), X1965 (chr), X1966
+##   (chr), X1967 (chr), X1968 (chr), X1969 (chr), X1970 (chr), X1971 (chr),
+##   X1972 (chr), X1973 (chr), X1974 (chr), X1975 (chr), X1976 (chr), X1977
+##   (chr), X1978 (chr), X1979 (chr), X1980 (chr), X1981 (chr), X1982 (chr),
+##   X1983 (chr), X1984 (chr), X1985 (chr), X1986 (chr), X1987 (chr), X1988
+##   (chr), X1989 (chr), X1990 (chr), X1991 (chr), X1992 (chr), X1993 (chr),
+##   X1994 (chr), X1995 (chr), X1996 (chr), X1997 (chr), X1998 (chr), X1999
+##   (chr), X2000 (chr), X2001 (chr), X2002 (chr), X2003 (chr), X2004 (chr),
+##   X2005 (chr), X2006 (chr), X2007 (chr), X2008 (chr), X2009 (chr), X2010
+##   (chr), X2011 (chr), X2012 (chr)</code></pre>
+<pre class="r"><code>glimpse(fao) # view all columns </code></pre>
+<pre><code>## Observations: 17,692
+## Variables: 71
+## $ Country..Country.                     (chr) &quot;Albania&quot;, &quot;Albania&quot;, &quot;A...
+## $ Species..ASFIS.species.               (chr) &quot;Angelsharks, sand devil...
+## $ Species..ISSCAAP.group.               (int) 38, 36, 37, 45, 32, 37, ...
+## $ Species..ISSCAAP.group..1             (chr) &quot;Sharks, rays, chimaeras...
+## $ Species..ASFIS.species..1             (chr) &quot;10903XXXXX&quot;, &quot;175010010...
+## $ Species..ASFIS.species..2             (chr) &quot;Squatinidae&quot;, &quot;Sarda sa...
+## $ Fishing.area..FAO.major.fishing.area. (int) 37, 37, 37, 37, 37, 37, ...
+## $ Measure..Measure.                     (chr) &quot;Quantity (tonnes)&quot;, &quot;Qu...
+## $ X1950                                 (chr) &quot;...&quot;, &quot;...&quot;, &quot;...&quot;, &quot;.....
+## $ X1951                                 (chr) &quot;...&quot;, &quot;...&quot;, &quot;...&quot;, &quot;.....
+## $ X1952                                 (chr) &quot;...&quot;, &quot;...&quot;, &quot;...&quot;, &quot;.....
+## $ X1953                                 (chr) &quot;...&quot;, &quot;...&quot;, &quot;...&quot;, &quot;.....
+## $ X1954                                 (chr) &quot;...&quot;, &quot;...&quot;, &quot;...&quot;, &quot;.....
+## $ X1955                                 (chr) &quot;...&quot;, &quot;...&quot;, &quot;...&quot;, &quot;.....
+## $ X1956                                 (chr) &quot;...&quot;, &quot;...&quot;, &quot;...&quot;, &quot;.....
+## $ X1957                                 (chr) &quot;...&quot;, &quot;...&quot;, &quot;...&quot;, &quot;.....
+## $ X1958                                 (chr) &quot;...&quot;, &quot;...&quot;, &quot;...&quot;, &quot;.....
+## $ X1959                                 (chr) &quot;...&quot;, &quot;...&quot;, &quot;...&quot;, &quot;.....
+## $ X1960                                 (chr) &quot;...&quot;, &quot;...&quot;, &quot;...&quot;, &quot;.....
+## $ X1961                                 (chr) &quot;...&quot;, &quot;...&quot;, &quot;...&quot;, &quot;.....
+## $ X1962                                 (chr) &quot;...&quot;, &quot;...&quot;, &quot;...&quot;, &quot;.....
+## $ X1963                                 (chr) &quot;...&quot;, &quot;...&quot;, &quot;...&quot;, &quot;.....
+## $ X1964                                 (chr) &quot;...&quot;, &quot;...&quot;, &quot;...&quot;, &quot;.....
+## $ X1965                                 (chr) &quot;...&quot;, &quot;...&quot;, &quot;...&quot;, &quot;.....
+## $ X1966                                 (chr) &quot;...&quot;, &quot;...&quot;, &quot;...&quot;, &quot;.....
+## $ X1967                                 (chr) &quot;...&quot;, &quot;...&quot;, &quot;...&quot;, &quot;.....
+## $ X1968                                 (chr) &quot;...&quot;, &quot;...&quot;, &quot;...&quot;, &quot;.....
+## $ X1969                                 (chr) &quot;...&quot;, &quot;...&quot;, &quot;...&quot;, &quot;.....
+## $ X1970                                 (chr) &quot;...&quot;, &quot;...&quot;, &quot;...&quot;, &quot;.....
+## $ X1971                                 (chr) &quot;...&quot;, &quot;...&quot;, &quot;...&quot;, &quot;.....
+## $ X1972                                 (chr) &quot;...&quot;, &quot;...&quot;, &quot;...&quot;, &quot;.....
+## $ X1973                                 (chr) &quot;...&quot;, &quot;...&quot;, &quot;...&quot;, &quot;.....
+## $ X1974                                 (chr) &quot;...&quot;, &quot;...&quot;, &quot;...&quot;, &quot;.....
+## $ X1975                                 (chr) &quot;...&quot;, &quot;...&quot;, &quot;...&quot;, &quot;.....
+## $ X1976                                 (chr) &quot;...&quot;, &quot;...&quot;, &quot;...&quot;, &quot;.....
+## $ X1977                                 (chr) &quot;...&quot;, &quot;...&quot;, &quot;...&quot;, &quot;.....
+## $ X1978                                 (chr) &quot;...&quot;, &quot;...&quot;, &quot;...&quot;, &quot;.....
+## $ X1979                                 (chr) &quot;...&quot;, &quot;...&quot;, &quot;...&quot;, &quot;.....
+## $ X1980                                 (chr) &quot;...&quot;, &quot;...&quot;, &quot;...&quot;, &quot;.....
+## $ X1981                                 (chr) &quot;...&quot;, &quot;...&quot;, &quot;...&quot;, &quot;.....
+## $ X1982                                 (chr) &quot;...&quot;, &quot;...&quot;, &quot;...&quot;, &quot;.....
+## $ X1983                                 (chr) &quot;...&quot;, &quot;...&quot;, &quot;...&quot;, &quot;.....
+## $ X1984                                 (chr) &quot;...&quot;, &quot;...&quot;, &quot;...&quot;, &quot;.....
+## $ X1985                                 (chr) &quot;...&quot;, &quot;...&quot;, &quot;...&quot;, &quot;.....
+## $ X1986                                 (chr) &quot;...&quot;, &quot;...&quot;, &quot;...&quot;, &quot;.....
+## $ X1987                                 (chr) &quot;...&quot;, &quot;...&quot;, &quot;...&quot;, &quot;.....
+## $ X1988                                 (chr) &quot;...&quot;, &quot;...&quot;, &quot;...&quot;, &quot;.....
+## $ X1989                                 (chr) &quot;...&quot;, &quot;...&quot;, &quot;...&quot;, &quot;.....
+## $ X1990                                 (chr) &quot;...&quot;, &quot;...&quot;, &quot;...&quot;, &quot;.....
+## $ X1991                                 (chr) &quot;...&quot;, &quot;...&quot;, &quot;...&quot;, &quot;.....
+## $ X1992                                 (chr) &quot;...&quot;, &quot;...&quot;, &quot;...&quot;, &quot;.....
+## $ X1993                                 (chr) &quot;...&quot;, &quot;...&quot;, &quot;...&quot;, &quot;.....
+## $ X1994                                 (chr) &quot;...&quot;, &quot;...&quot;, &quot;...&quot;, &quot;.....
+## $ X1995                                 (chr) &quot;0 0&quot;, &quot;1&quot;, &quot;...&quot;, &quot;0 0&quot;...
+## $ X1996                                 (chr) &quot;53&quot;, &quot;2&quot;, &quot;...&quot;, &quot;3&quot;, &quot;...
+## $ X1997                                 (chr) &quot;20&quot;, &quot;0 0&quot;, &quot;...&quot;, &quot;0 0...
+## $ X1998                                 (chr) &quot;31&quot;, &quot;12&quot;, &quot;...&quot;, &quot;-&quot;, ...
+## $ X1999                                 (chr) &quot;30&quot;, &quot;30&quot;, &quot;...&quot;, &quot;-&quot;, ...
+## $ X2000                                 (chr) &quot;30&quot;, &quot;25&quot;, &quot;2&quot;, &quot;-&quot;, &quot;-...
+## $ X2001                                 (chr) &quot;16&quot;, &quot;30&quot;, &quot;...&quot;, &quot;-&quot;, ...
+## $ X2002                                 (chr) &quot;79&quot;, &quot;24&quot;, &quot;...&quot;, &quot;34&quot;,...
+## $ X2003                                 (chr) &quot;1&quot;, &quot;4&quot;, &quot;...&quot;, &quot;22&quot;, &quot;...
+## $ X2004                                 (chr) &quot;4&quot;, &quot;2&quot;, &quot;2&quot;, &quot;15&quot;, &quot;1&quot;...
+## $ X2005                                 (chr) &quot;68&quot;, &quot;23&quot;, &quot;4&quot;, &quot;12&quot;, &quot;...
+## $ X2006                                 (chr) &quot;55&quot;, &quot;30&quot;, &quot;7&quot;, &quot;18&quot;, &quot;...
+## $ X2007                                 (chr) &quot;12&quot;, &quot;19&quot;, &quot;...&quot;, &quot;...&quot;...
+## $ X2008                                 (chr) &quot;23&quot;, &quot;27&quot;, &quot;...&quot;, &quot;...&quot;...
+## $ X2009                                 (chr) &quot;14&quot;, &quot;21&quot;, &quot;...&quot;, &quot;...&quot;...
+## $ X2010                                 (chr) &quot;78&quot;, &quot;23&quot;, &quot;7&quot;, &quot;...&quot;, ...
+## $ X2011                                 (chr) &quot;12&quot;, &quot;12&quot;, &quot;...&quot;, &quot;...&quot;...
+## $ X2012                                 (chr) &quot;5&quot;, &quot;5&quot;, &quot;...&quot;, &quot;...&quot;, ...</code></pre>
+<pre class="r"><code>summary(fao)</code></pre>
+<pre><code>##  Country..Country.  Species..ASFIS.species. Species..ISSCAAP.group.
+##  Length:17692       Length:17692            Min.   :11.00          
+##  Class :character   Class :character        1st Qu.:33.00          
+##  Mode  :character   Mode  :character        Median :36.00          
+##                                             Mean   :37.38          
+##                                             3rd Qu.:38.00          
+##                                             Max.   :77.00          
+##  Species..ISSCAAP.group..1 Species..ASFIS.species..1
+##  Length:17692              Length:17692             
+##  Class :character          Class :character         
+##  Mode  :character          Mode  :character         
+##                                                     
+##                                                     
+##                                                     
+##  Species..ASFIS.species..2 Fishing.area..FAO.major.fishing.area.
+##  Length:17692              Min.   :18.00                        
+##  Class :character          1st Qu.:31.00                        
+##  Mode  :character          Median :37.00                        
+##                            Mean   :45.34                        
+##                            3rd Qu.:57.00                        
+##                            Max.   :88.00                        
+##  Measure..Measure.     X1950              X1951          
+##  Length:17692       Length:17692       Length:17692      
+##  Class :character   Class :character   Class :character  
+##  Mode  :character   Mode  :character   Mode  :character  
+##                                                          
+##                                                          
+##                                                          
+##     X1952              X1953              X1954          
+##  Length:17692       Length:17692       Length:17692      
+##  Class :character   Class :character   Class :character  
+##  Mode  :character   Mode  :character   Mode  :character  
+##                                                          
+##                                                          
+##                                                          
+##     X1955              X1956              X1957          
+##  Length:17692       Length:17692       Length:17692      
+##  Class :character   Class :character   Class :character  
+##  Mode  :character   Mode  :character   Mode  :character  
+##                                                          
+##                                                          
+##                                                          
+##     X1958              X1959              X1960          
+##  Length:17692       Length:17692       Length:17692      
+##  Class :character   Class :character   Class :character  
+##  Mode  :character   Mode  :character   Mode  :character  
+##                                                          
+##                                                          
+##                                                          
+##     X1961              X1962              X1963          
+##  Length:17692       Length:17692       Length:17692      
+##  Class :character   Class :character   Class :character  
+##  Mode  :character   Mode  :character   Mode  :character  
+##                                                          
+##                                                          
+##                                                          
+##     X1964              X1965              X1966          
+##  Length:17692       Length:17692       Length:17692      
+##  Class :character   Class :character   Class :character  
+##  Mode  :character   Mode  :character   Mode  :character  
+##                                                          
+##                                                          
+##                                                          
+##     X1967              X1968              X1969          
+##  Length:17692       Length:17692       Length:17692      
+##  Class :character   Class :character   Class :character  
+##  Mode  :character   Mode  :character   Mode  :character  
+##                                                          
+##                                                          
+##                                                          
+##     X1970              X1971              X1972          
+##  Length:17692       Length:17692       Length:17692      
+##  Class :character   Class :character   Class :character  
+##  Mode  :character   Mode  :character   Mode  :character  
+##                                                          
+##                                                          
+##                                                          
+##     X1973              X1974              X1975          
+##  Length:17692       Length:17692       Length:17692      
+##  Class :character   Class :character   Class :character  
+##  Mode  :character   Mode  :character   Mode  :character  
+##                                                          
+##                                                          
+##                                                          
+##     X1976              X1977              X1978          
+##  Length:17692       Length:17692       Length:17692      
+##  Class :character   Class :character   Class :character  
+##  Mode  :character   Mode  :character   Mode  :character  
+##                                                          
+##                                                          
+##                                                          
+##     X1979              X1980              X1981          
+##  Length:17692       Length:17692       Length:17692      
+##  Class :character   Class :character   Class :character  
+##  Mode  :character   Mode  :character   Mode  :character  
+##                                                          
+##                                                          
+##                                                          
+##     X1982              X1983              X1984          
+##  Length:17692       Length:17692       Length:17692      
+##  Class :character   Class :character   Class :character  
+##  Mode  :character   Mode  :character   Mode  :character  
+##                                                          
+##                                                          
+##                                                          
+##     X1985              X1986              X1987          
+##  Length:17692       Length:17692       Length:17692      
+##  Class :character   Class :character   Class :character  
+##  Mode  :character   Mode  :character   Mode  :character  
+##                                                          
+##                                                          
+##                                                          
+##     X1988              X1989              X1990          
+##  Length:17692       Length:17692       Length:17692      
+##  Class :character   Class :character   Class :character  
+##  Mode  :character   Mode  :character   Mode  :character  
+##                                                          
+##                                                          
+##                                                          
+##     X1991              X1992              X1993          
+##  Length:17692       Length:17692       Length:17692      
+##  Class :character   Class :character   Class :character  
+##  Mode  :character   Mode  :character   Mode  :character  
+##                                                          
+##                                                          
+##                                                          
+##     X1994              X1995              X1996          
+##  Length:17692       Length:17692       Length:17692      
+##  Class :character   Class :character   Class :character  
+##  Mode  :character   Mode  :character   Mode  :character  
+##                                                          
+##                                                          
+##                                                          
+##     X1997              X1998              X1999          
+##  Length:17692       Length:17692       Length:17692      
+##  Class :character   Class :character   Class :character  
+##  Mode  :character   Mode  :character   Mode  :character  
+##                                                          
+##                                                          
+##                                                          
+##     X2000              X2001              X2002          
+##  Length:17692       Length:17692       Length:17692      
+##  Class :character   Class :character   Class :character  
+##  Mode  :character   Mode  :character   Mode  :character  
+##                                                          
+##                                                          
+##                                                          
+##     X2003              X2004              X2005          
+##  Length:17692       Length:17692       Length:17692      
+##  Class :character   Class :character   Class :character  
+##  Mode  :character   Mode  :character   Mode  :character  
+##                                                          
+##                                                          
+##                                                          
+##     X2006              X2007              X2008          
+##  Length:17692       Length:17692       Length:17692      
+##  Class :character   Class :character   Class :character  
+##  Mode  :character   Mode  :character   Mode  :character  
+##                                                          
+##                                                          
+##                                                          
+##     X2009              X2010              X2011          
+##  Length:17692       Length:17692       Length:17692      
+##  Class :character   Class :character   Class :character  
+##  Mode  :character   Mode  :character   Mode  :character  
+##                                                          
+##                                                          
+##                                                          
+##     X2012          
+##  Length:17692      
+##  Class :character  
+##  Mode  :character  
+##                    
+##                    
+## </code></pre>
+<pre class="r"><code>if (interactive()) View(fao) # interactive==T if in Console, not knitting</code></pre>
+</div>
+<div id="tidy-data" class="section level3">
+<h3>Tidy data</h3>
+<p>In general, it is good practice to have your data organized in a “tidy” format.</p>
+<p>In tidy data:</p>
+<ul>
+<li>Each variable forms a column<br />
+</li>
+<li>Each observation forms a row<br />
+</li>
+<li>Each type of observational unit forms a table</li>
+</ul>
+</div>
+<div id="main-verbs-of-dplyr-and-tidyr" class="section level3">
+<h3>Main verbs of dplyr and tidyr</h3>
+<p>Tidyr and dplyr are designed to help manipulate data sets, allowing you to convert between <em>wide</em> and <em>long</em> formats, fill in missing values and combinations, separate or merge multiple columns, rename and create new variables, and summarize data according to grouping variables.</p>
+<p>Dplyr and tidyr rely on the following main verbs:</p>
+<ul>
+<li>Tidyr</li>
+<li><code>gather()</code> and <code>spread()</code> convert data between wide and long format<br />
+</li>
+<li><code>separate()</code> and <code>unite()</code> separate a single column into multiple columns and vice versa<br />
+</li>
+<li><p><code>complete()</code> turns implicit missing values in explicit missing values by completing missing data combinations</p></li>
+<li>Dplyr</li>
+<li><code>filter()</code> subset data based on logical criteria<br />
+</li>
+<li><code>select()</code> select certain columns<br />
+</li>
+<li><code>arrange()</code> order rows by value of a column<br />
+</li>
+<li><code>rename()</code> rename columns<br />
+</li>
+<li><code>group_by()</code> group data by common variables for performing calculations<br />
+</li>
+<li><code>mutate()</code> create a new variable/column<br />
+</li>
+<li><p><code>summarize()</code> summarize data into a single row of values</p></li>
+</ul>
+<p>Note that <em>unquoted</em> variable names are used by default in tidyr and dplyr functions.</p>
+<p>We’ll use these verbs to process the raw FAO landings data into a more manageable tidy format.</p>
+<div id="gather-and-spread" class="section level4">
+<h4>Gather and Spread</h4>
+<p>First let’s convert the FAO data from the current wide format to a long format.</p>
+<pre class="r"><code># Let&#39;s convert the fao data from it&#39;s current wide format to a long format using gather(). Note the use of helper fnc
+d &lt;- gather(fao, key=&#39;Year&#39;, value=&#39;Catch&#39;, num_range(&#39;X&#39;,1950:2012)) # ?select for num_range()
+
+# We can convert back to wide format with the spread function by calling the previously created variables
+spread(d,Year, Catch)</code></pre>
+<pre><code>## Source: local data frame [17,692 x 71]
+## 
+##    Country..Country.      Species..ASFIS.species. Species..ISSCAAP.group.
+##                (chr)                        (chr)                   (int)
+## 1            Albania Angelsharks, sand devils nei                      38
+## 2            Albania              Atlantic bonito                      36
+## 3            Albania               Barracudas nei                      37
+## 4            Albania          Blue and red shrimp                      45
+## 5            Albania     Blue whiting(=Poutassou)                      32
+## 6            Albania                     Bluefish                      37
+## 7            Albania                        Bogue                      33
+## 8            Albania               Caramote prawn                      45
+## 9            Albania   Catsharks, nursehounds nei                      38
+## 10           Albania            Common cuttlefish                      57
+## ..               ...                          ...                     ...
+## Variables not shown: Species..ISSCAAP.group..1 (chr),
+##   Species..ASFIS.species..1 (chr), Species..ASFIS.species..2 (chr),
+##   Fishing.area..FAO.major.fishing.area. (int), Measure..Measure. (chr),
+##   X1950 (chr), X1951 (chr), X1952 (chr), X1953 (chr), X1954 (chr), X1955
+##   (chr), X1956 (chr), X1957 (chr), X1958 (chr), X1959 (chr), X1960 (chr),
+##   X1961 (chr), X1962 (chr), X1963 (chr), X1964 (chr), X1965 (chr), X1966
+##   (chr), X1967 (chr), X1968 (chr), X1969 (chr), X1970 (chr), X1971 (chr),
+##   X1972 (chr), X1973 (chr), X1974 (chr), X1975 (chr), X1976 (chr), X1977
+##   (chr), X1978 (chr), X1979 (chr), X1980 (chr), X1981 (chr), X1982 (chr),
+##   X1983 (chr), X1984 (chr), X1985 (chr), X1986 (chr), X1987 (chr), X1988
+##   (chr), X1989 (chr), X1990 (chr), X1991 (chr), X1992 (chr), X1993 (chr),
+##   X1994 (chr), X1995 (chr), X1996 (chr), X1997 (chr), X1998 (chr), X1999
+##   (chr), X2000 (chr), X2001 (chr), X2002 (chr), X2003 (chr), X2004 (chr),
+##   X2005 (chr), X2006 (chr), X2007 (chr), X2008 (chr), X2009 (chr), X2010
+##   (chr), X2011 (chr), X2012 (chr)</code></pre>
+<pre class="r"><code>if (interactive()) View(d) # interactive==T if in Console, not knitting
+# to handle: &#39;-&#39;,&#39;...&#39;,&#39; F&#39;,&#39;X&#39;</code></pre>
+</div>
+<div id="rename" class="section level4">
+<h4>Rename</h4>
+<p>Now let’s rename the columns to more manageable names (syntax is <em>new name</em> = <em>old name</em>)</p>
+<pre class="r"><code># Note the use of backticks around column names with special characters like &quot;(&quot;
+d &lt;- rename(
+  d,
+  country     = Country..Country.,
+  commname    = Species..ASFIS.species.,
+  sciname     = Species..ASFIS.species..2,
+  spcode      = Species..ASFIS.species..1,
+  spgroup     = Species..ISSCAAP.group.,
+  spgroupname = Species..ISSCAAP.group..1,
+  regionfao   = Fishing.area..FAO.major.fishing.area.,
+  unit        = Measure..Measure.,
+  year        = Year,catch=Catch)
+d</code></pre>
+<pre><code>## Source: local data frame [1,114,596 x 10]
+## 
+##    country                     commname spgroup
+##      (chr)                        (chr)   (int)
+## 1  Albania Angelsharks, sand devils nei      38
+## 2  Albania              Atlantic bonito      36
+## 3  Albania               Barracudas nei      37
+## 4  Albania          Blue and red shrimp      45
+## 5  Albania     Blue whiting(=Poutassou)      32
+## 6  Albania                     Bluefish      37
+## 7  Albania                        Bogue      33
+## 8  Albania               Caramote prawn      45
+## 9  Albania   Catsharks, nursehounds nei      38
+## 10 Albania            Common cuttlefish      57
+## ..     ...                          ...     ...
+## Variables not shown: spgroupname (chr), spcode (chr), sciname (chr),
+##   regionfao (int), unit (chr), year (chr), catch (chr)</code></pre>
+</div>
+<div id="select" class="section level4">
+<h4>Select</h4>
+<p>Remove unwanted columns and observations.</p>
+<pre class="r"><code># we could chose all the columns to keep
+select(d,country, commname, sciname, spcode, spgroupname, regionfao, year, catch)</code></pre>
+<pre><code>## Source: local data frame [1,114,596 x 8]
+## 
+##    country                     commname                  sciname
+##      (chr)                        (chr)                    (chr)
+## 1  Albania Angelsharks, sand devils nei              Squatinidae
+## 2  Albania              Atlantic bonito              Sarda sarda
+## 3  Albania               Barracudas nei            Sphyraena spp
+## 4  Albania          Blue and red shrimp      Aristeus antennatus
+## 5  Albania     Blue whiting(=Poutassou) Micromesistius poutassou
+## 6  Albania                     Bluefish      Pomatomus saltatrix
+## 7  Albania                        Bogue              Boops boops
+## 8  Albania               Caramote prawn       Penaeus kerathurus
+## 9  Albania   Catsharks, nursehounds nei         Scyliorhinus spp
+## 10 Albania            Common cuttlefish        Sepia officinalis
+## ..     ...                          ...                      ...
+## Variables not shown: spcode (chr), spgroupname (chr), regionfao (int),
+##   year (chr), catch (chr)</code></pre>
+<pre class="r"><code># but it&#39;s easier to just specify the columns to get rid of
+d&lt;-select(d,-spgroup,-unit)</code></pre>
+<p>There are also a number of <strong>helper functions</strong> that can be used in conjunction with <code>select()</code> to let you select without individually listing all those you wish to keep or drop. We used a helper function previously in our <code>gather()</code> function and now we’ll try a few others.</p>
+<pre class="r"><code># select all coloumns that begin with the letter s
+select(d, starts_with(&#39;s&#39;))</code></pre>
+<pre><code>## Source: local data frame [1,114,596 x 3]
+## 
+##                        spgroupname     spcode                  sciname
+##                              (chr)      (chr)                    (chr)
+## 1          Sharks, rays, chimaeras 10903XXXXX              Squatinidae
+## 2       Tunas, bonitos, billfishes 1750100101              Sarda sarda
+## 3     Miscellaneous pelagic fishes 17710001XX            Sphyraena spp
+## 4                  Shrimps, prawns 2280203101      Aristeus antennatus
+## 5            Cods, hakes, haddocks 1480403301 Micromesistius poutassou
+## 6     Miscellaneous pelagic fishes 1702021301      Pomatomus saltatrix
+## 7     Miscellaneous coastal fishes 1703926101              Boops boops
+## 8                  Shrimps, prawns 2280100117       Penaeus kerathurus
+## 9          Sharks, rays, chimaeras 10801003XX         Scyliorhinus spp
+## 10 Squids, cuttlefishes, octopuses 3210200202        Sepia officinalis
+## ..                             ...        ...                      ...</code></pre>
+<pre class="r"><code># select columns that match a regular expression
+select(d, matches(&#39;*name&#39;))</code></pre>
+<pre><code>## Source: local data frame [1,114,596 x 3]
+## 
+##                        commname                     spgroupname
+##                           (chr)                           (chr)
+## 1  Angelsharks, sand devils nei         Sharks, rays, chimaeras
+## 2               Atlantic bonito      Tunas, bonitos, billfishes
+## 3                Barracudas nei    Miscellaneous pelagic fishes
+## 4           Blue and red shrimp                 Shrimps, prawns
+## 5      Blue whiting(=Poutassou)           Cods, hakes, haddocks
+## 6                      Bluefish    Miscellaneous pelagic fishes
+## 7                         Bogue    Miscellaneous coastal fishes
+## 8                Caramote prawn                 Shrimps, prawns
+## 9    Catsharks, nursehounds nei         Sharks, rays, chimaeras
+## 10            Common cuttlefish Squids, cuttlefishes, octopuses
+## ..                          ...                             ...
+## Variables not shown: sciname (chr)</code></pre>
+<pre class="r"><code># select columns between two columns by referencing their position like normal [,x:y] syntax 
+select(d, country, spcode:year)</code></pre>
+<pre><code>## Source: local data frame [1,114,596 x 5]
+## 
+##    country     spcode                  sciname regionfao  year
+##      (chr)      (chr)                    (chr)     (int) (chr)
+## 1  Albania 10903XXXXX              Squatinidae        37 X1950
+## 2  Albania 1750100101              Sarda sarda        37 X1950
+## 3  Albania 17710001XX            Sphyraena spp        37 X1950
+## 4  Albania 2280203101      Aristeus antennatus        37 X1950
+## 5  Albania 1480403301 Micromesistius poutassou        37 X1950
+## 6  Albania 1702021301      Pomatomus saltatrix        37 X1950
+## 7  Albania 1703926101              Boops boops        37 X1950
+## 8  Albania 2280100117       Penaeus kerathurus        37 X1950
+## 9  Albania 10801003XX         Scyliorhinus spp        37 X1950
+## 10 Albania 3210200202        Sepia officinalis        37 X1950
+## ..     ...        ...                      ...       ...   ...</code></pre>
+<pre class="r"><code># select every column (though I haven&#39;t found a situation where this is useful yet...)
+select(d,everything())</code></pre>
+<pre><code>## Source: local data frame [1,114,596 x 8]
+## 
+##    country                     commname                     spgroupname
+##      (chr)                        (chr)                           (chr)
+## 1  Albania Angelsharks, sand devils nei         Sharks, rays, chimaeras
+## 2  Albania              Atlantic bonito      Tunas, bonitos, billfishes
+## 3  Albania               Barracudas nei    Miscellaneous pelagic fishes
+## 4  Albania          Blue and red shrimp                 Shrimps, prawns
+## 5  Albania     Blue whiting(=Poutassou)           Cods, hakes, haddocks
+## 6  Albania                     Bluefish    Miscellaneous pelagic fishes
+## 7  Albania                        Bogue    Miscellaneous coastal fishes
+## 8  Albania               Caramote prawn                 Shrimps, prawns
+## 9  Albania   Catsharks, nursehounds nei         Sharks, rays, chimaeras
+## 10 Albania            Common cuttlefish Squids, cuttlefishes, octopuses
+## ..     ...                          ...                             ...
+## Variables not shown: spcode (chr), sciname (chr), regionfao (int), year
+##   (chr), catch (chr)</code></pre>
+</div>
+<div id="arrange" class="section level4">
+<h4>Arrange</h4>
+<p>Arrange entries by country, scientific name, fao region and year. You can use <code>desc()</code> within <code>arrange()</code> to control which variables you want to order in ascending or descending fashion</p>
+<pre class="r"><code># arrange by country, sciname, regionfao, and year
+d&lt;-arrange(d,country,sciname,regionfao,year)
+
+# if we&#39;d like the years to be descending
+arrange(d, country, desc(sciname), regionfao, desc(year))</code></pre>
+<pre><code>## Source: local data frame [1,114,596 x 8]
+## 
+##    country  commname                   spgroupname     spcode    sciname
+##      (chr)     (chr)                         (chr)      (chr)      (chr)
+## 1  Albania John dory Miscellaneous demersal fishes 1620100101 Zeus faber
+## 2  Albania John dory Miscellaneous demersal fishes 1620100101 Zeus faber
+## 3  Albania John dory Miscellaneous demersal fishes 1620100101 Zeus faber
+## 4  Albania John dory Miscellaneous demersal fishes 1620100101 Zeus faber
+## 5  Albania John dory Miscellaneous demersal fishes 1620100101 Zeus faber
+## 6  Albania John dory Miscellaneous demersal fishes 1620100101 Zeus faber
+## 7  Albania John dory Miscellaneous demersal fishes 1620100101 Zeus faber
+## 8  Albania John dory Miscellaneous demersal fishes 1620100101 Zeus faber
+## 9  Albania John dory Miscellaneous demersal fishes 1620100101 Zeus faber
+## 10 Albania John dory Miscellaneous demersal fishes 1620100101 Zeus faber
+## ..     ...       ...                           ...        ...        ...
+## Variables not shown: regionfao (int), year (chr), catch (chr)</code></pre>
+<pre class="r"><code># if we want to first order by species
+arrange(d, sciname, country, regionfao, year)</code></pre>
+<pre><code>## Source: local data frame [1,114,596 x 8]
+## 
+##    country        commname                  spgroupname     spcode
+##      (chr)           (chr)                        (chr)      (chr)
+## 1    Qatar Flat needlefish Miscellaneous pelagic fishes 1470100801
+## 2    Qatar Flat needlefish Miscellaneous pelagic fishes 1470100801
+## 3    Qatar Flat needlefish Miscellaneous pelagic fishes 1470100801
+## 4    Qatar Flat needlefish Miscellaneous pelagic fishes 1470100801
+## 5    Qatar Flat needlefish Miscellaneous pelagic fishes 1470100801
+## 6    Qatar Flat needlefish Miscellaneous pelagic fishes 1470100801
+## 7    Qatar Flat needlefish Miscellaneous pelagic fishes 1470100801
+## 8    Qatar Flat needlefish Miscellaneous pelagic fishes 1470100801
+## 9    Qatar Flat needlefish Miscellaneous pelagic fishes 1470100801
+## 10   Qatar Flat needlefish Miscellaneous pelagic fishes 1470100801
+## ..     ...             ...                          ...        ...
+## Variables not shown: sciname (chr), regionfao (int), year (chr), catch
+##   (chr)</code></pre>
+</div>
+<div id="mutate" class="section level4">
+<h4>Mutate</h4>
+<p>Mutate can be used to edit existing variables or create new ones.</p>
+<pre class="r"><code>d &lt;- mutate(
+  d,
+  year      = as.numeric(str_replace(year, &#39;X&#39;, &#39;&#39;)), # strip X off all year values and convert to numeric
+  catch     = as.numeric(str_replace(catch, c(&#39; F&#39;,&#39;...&#39;,&#39;-&#39;), replacement = &#39;&#39;)),
+  logcatch  = log10(catch)) # create a  new variable of log catch</code></pre>
+<pre><code>## Warning in eval(substitute(expr), envir, enclos): NAs introduced by
+## coercion</code></pre>
+</div>
+<div id="filter" class="section level4">
+<h4>Filter</h4>
+<p>Remove unwanted rows/observations.</p>
+<pre class="r"><code># remove the &quot;Totals&quot; values and any years with NA catch values
+d&lt;-filter(d,!(country %in% c(&#39;Totals - Quantity (number)&#39;,&#39;Totals - Quantity (tonnes)&#39;)) &amp; !is.na(catch))
+
+# print data
+d</code></pre>
+<pre><code>## Source: local data frame [310,619 x 9]
+## 
+##    country                      commname                  spgroupname
+##      (chr)                         (chr)                        (chr)
+## 1  Albania           Blue and red shrimp              Shrimps, prawns
+## 2  Albania           Blue and red shrimp              Shrimps, prawns
+## 3  Albania           Blue and red shrimp              Shrimps, prawns
+## 4  Albania           Blue and red shrimp              Shrimps, prawns
+## 5  Albania           Blue and red shrimp              Shrimps, prawns
+## 6  Albania           Blue and red shrimp              Shrimps, prawns
+## 7  Albania Silversides(=Sand smelts) nei Miscellaneous pelagic fishes
+## 8  Albania Silversides(=Sand smelts) nei Miscellaneous pelagic fishes
+## 9  Albania Silversides(=Sand smelts) nei Miscellaneous pelagic fishes
+## 10 Albania Silversides(=Sand smelts) nei Miscellaneous pelagic fishes
+## ..     ...                           ...                          ...
+## Variables not shown: spcode (chr), sciname (chr), regionfao (int), year
+##   (dbl), catch (dbl), logcatch (dbl)</code></pre>
+</div>
+</div>
+<div id="piping-and-chaining-code" class="section level3">
+<h3>Piping and chaining code</h3>
+<p>While the above workflow is perfectly acceptable, dplyr allows you to use the <em>pipe</em> (<code>%&gt;%</code>) operator to <em>chain</em> functions together. Chaining code allows you to streamline your workflow and make it easier to read.</p>
+<p>When using the <code>%&gt;%</code> operator, first specify the data frame that all following functions will use. For the rest of the chain the data frame argument can be omitted from the remaining functions.</p>
+<p>Now consider the same process as before only using pipes and a single dplyr chain:</p>
+<pre class="r"><code>d &lt;- fao %&gt;%
+  gather(key=&#39;Year&#39;,value = &#39;Catch&#39;,num_range(&#39;X&#39;,1950:2012)) %&gt;% # convert to long format
+  rename(
+    country     = Country..Country., # rename columns
+    #country     = `Country (Country)`, # backtick trick!
+    commname    = Species..ASFIS.species.,
+    spcode      = Species..ASFIS.species..1,
+    sciname     = Species..ASFIS.species..2,
+    spgroup     = Species..ISSCAAP.group.,
+    spgroupname = Species..ISSCAAP.group..1,
+    regionfao   = Fishing.area..FAO.major.fishing.area.,
+    unit        = Measure..Measure.,
+    year        = Year,
+    catch       = Catch) %&gt;%
+  select(-spgroup,-unit) %&gt;% # drop spgroup, regionfaoname, and unit variables
+  arrange(country,sciname,regionfao,year) %&gt;% # order by country, sciname, regionfao, and year
+  mutate(
+    year        = as.numeric(str_replace(year, &#39;X&#39;, &#39;&#39;)), # strip X off all year values and convert to numeric
+    catch       = as.numeric(gsub(catch, pattern=c(&#39; F&#39;), replacement = &#39;&#39;, fixed = T)),
+    logcatch    = log10(catch)) %&gt;% # create a  new variable of log catch 
+  filter(!country %in% c(&#39;Totals - Quantity (number)&#39;,&#39;Totals - Quantity (tonnes)&#39;) &amp; !is.na(catch)) # remove &#39;Totals&#39; rows - rows: 1,114,596 -&gt; 310,619</code></pre>
+<pre><code>## Warning in eval(substitute(expr), envir, enclos): NAs introduced by
+## coercion</code></pre>
+<pre class="r"><code># print data frame
+d</code></pre>
+<pre><code>## Source: local data frame [357,807 x 9]
+## 
+##    country                      commname                  spgroupname
+##      (chr)                         (chr)                        (chr)
+## 1  Albania           Blue and red shrimp              Shrimps, prawns
+## 2  Albania           Blue and red shrimp              Shrimps, prawns
+## 3  Albania           Blue and red shrimp              Shrimps, prawns
+## 4  Albania           Blue and red shrimp              Shrimps, prawns
+## 5  Albania           Blue and red shrimp              Shrimps, prawns
+## 6  Albania           Blue and red shrimp              Shrimps, prawns
+## 7  Albania Silversides(=Sand smelts) nei Miscellaneous pelagic fishes
+## 8  Albania Silversides(=Sand smelts) nei Miscellaneous pelagic fishes
+## 9  Albania Silversides(=Sand smelts) nei Miscellaneous pelagic fishes
+## 10 Albania Silversides(=Sand smelts) nei Miscellaneous pelagic fishes
+## ..     ...                           ...                          ...
+## Variables not shown: spcode (chr), sciname (chr), regionfao (int), year
+##   (dbl), catch (dbl), logcatch (dbl)</code></pre>
+<p>By chaining our code we were able to reproduce the same data frame without the need to continually overwrite it, and we can easily read each step in the process by observing the different verbs. We also only needed to reference the original data frame (fao) at the beginning of the chain rather than in each function call.</p>
+<div id="complete" class="section level4">
+<h4>Complete</h4>
+<p>Now our data is nice and tidy, but we realize that we actually want to retain NA values for years with missing catch data. We could just go back and remove the second argument from our <code>filter()</code> function. Or we could use the nifty <code>complete()</code> function to add in the missing combinations.</p>
+<pre class="r"><code>d %&gt;%
+  complete(year = 1950:2012)</code></pre>
+<pre><code>## Source: local data frame [357,807 x 9]
+## 
+##     year country                     commname
+##    (dbl)   (chr)                        (chr)
+## 1   1950 Albania            Marine fishes nei
+## 2   1950 Algeria             European anchovy
+## 3   1950 Algeria                European hake
+## 4   1950 Algeria Surmullets(=Red mullets) nei
+## 5   1950 Algeria               Norway lobster
+## 6   1950 Algeria            Marine fishes nei
+## 7   1950 Algeria       Deep-water rose shrimp
+## 8   1950 Algeria  Rays, stingrays, mantas nei
+## 9   1950 Algeria  European pilchard(=Sardine)
+## 10  1950 Algeria            Atlantic mackerel
+## ..   ...     ...                          ...
+## Variables not shown: spgroupname (chr), spcode (chr), sciname (chr),
+##   regionfao (int), catch (dbl), logcatch (dbl)</code></pre>
+<pre class="r"><code>d %&gt;%
+  group_by(country,sciname,commname,regionfao,spgroupname,spcode) %&gt;%
+  complete(year = 1950:2012) %&gt;%
+  ungroup()</code></pre>
+<pre><code>## Source: local data frame [1,099,791 x 9]
+## 
+##    country             sciname            commname regionfao
+##      (chr)               (chr)               (chr)     (int)
+## 1  Albania Aristeus antennatus Blue and red shrimp        37
+## 2  Albania Aristeus antennatus Blue and red shrimp        37
+## 3  Albania Aristeus antennatus Blue and red shrimp        37
+## 4  Albania Aristeus antennatus Blue and red shrimp        37
+## 5  Albania Aristeus antennatus Blue and red shrimp        37
+## 6  Albania Aristeus antennatus Blue and red shrimp        37
+## 7  Albania Aristeus antennatus Blue and red shrimp        37
+## 8  Albania Aristeus antennatus Blue and red shrimp        37
+## 9  Albania Aristeus antennatus Blue and red shrimp        37
+## 10 Albania Aristeus antennatus Blue and red shrimp        37
+## ..     ...                 ...                 ...       ...
+## Variables not shown: spgroupname (chr), spcode (chr), year (dbl), catch
+##   (dbl), logcatch (dbl)</code></pre>
+</div>
+<div id="separate-and-unite" class="section level4">
+<h4>Separate and Unite</h4>
+<p>The <code>df$spcode</code> variable actually consists of 5 individual parts.</p>
+<p><img src="img/spcodes.png" alt="" /></p>
+<p>We decide we want to create a new column for each taxonomic division of the spcode. We can accomplish this with <code>separate()</code> and undue it with <code>unite()</code></p>
+<pre class="r"><code># create new variables for each taxonomic component 
+d&lt;-separate(d,spcode, into = c(&#39;maintaxa&#39;,&#39;order&#39;,&#39;family&#39;,&#39;genus&#39;,&#39;species&#39;), sep = c(2,4,6,9))
+
+# recombine the columns with unite 
+d&lt;-unite(d, col = spcode, maintaxa:species, sep = &#39;&#39;) # Note - we can use helper functions here if needed</code></pre>
+</div>
+</div>
+<div id="joins" class="section level3">
+<h3>Joins</h3>
+<p>So far we’ve been working with a single data frame, but dplyr provides a handful of really useful <strong>join</strong> functions that allow you to combine datasets in a variety of ways. To demonstrate the different methods of joining, we will combine our FAO dataset with a dataset of life history information from FishBase.</p>
+<p>Dplyr allows for <em>mutating</em> joins and <em>filtering</em> joins. Mutating joins will combine information from both data frames in different ways, while filtering joins will filter a single dataset based on matches in another data set.</p>
+<p>For joins to work, variable names must be the same in both datasets. This often requires using <code>rename()</code> prior to your join functions if you do not want to permanently alter the variable names in each dataset.</p>
+<ul>
+<li>Mutating joins</li>
+<li><code>left_join(a, b, by = c('...'))</code> join matching rows from b to a by matching variables in vector<br />
+</li>
+<li><code>right_join(a, b, by = c('...'))</code> join matching rows from a to b by matching variables in vector<br />
+</li>
+<li><code>inner_join(a, b, by = c('...'))</code> join data, retaining only rows in both a and b<br />
+</li>
+<li><code>full_join(a, b, by = c('...'))</code> join data, retaining all values, all rows</li>
+</ul>
+<p>Lets use join functions to explore adding life history parameters to our FAO data</p>
+<pre class="r"><code># read in life history data
+load(file = &#39;data/mpack.Rdata&#39;)
+lh&lt;-mpack$lh
+rm(mpack)
+
+lh&lt;-lh %&gt;%
+  tbl_df() %&gt;%
+  rename(sciname=sname) %&gt;% # rename to sciname for joining
+  select(sciname,vbk,temp,maxl,agem) %&gt;% # select variables we wish to add
+  slice(match(unique(lh$sname),lh$sname))
+
+# first let&#39;s pull out all species US fisheries
+us&lt;- d %&gt;%
+  ungroup() %&gt;%
+  filter(country==&#39;United States of America&#39; &amp; year==2012) %&gt;%
+  select(country, sciname, commname, spgroupname) %&gt;%
+  distinct()
+  
+# left join to retain all data in our d data frame. 
+us %&gt;% 
+  left_join(lh, by = &#39;sciname&#39;) # we only need to specify the right hand data set to join lh with since we&#39;ve piped</code></pre>
+<pre><code>## Source: local data frame [308 x 8]
+## 
+##                     country                 sciname
+##                       (chr)                   (chr)
+## 1  United States of America  Acanthocybium solandri
+## 2  United States of America            Acanthuridae
+## 3  United States of America Acipenser transmontanus
+## 4  United States of America             Alopias spp
+## 5  United States of America        Alopias vulpinus
+## 6  United States of America    Alosa pseudoharengus
+## 7  United States of America       Alosa sapidissima
+## 8  United States of America           Ammodytes spp
+## 9  United States of America          Anadara ovalis
+## 10 United States of America      Anoplopoma fimbria
+## ..                      ...                     ...
+## Variables not shown: commname (chr), spgroupname (chr), vbk (dbl), temp
+##   (dbl), maxl (dbl), agem (dbl)</code></pre>
+<pre class="r"><code># right join to keep all lh data.  
+us %&gt;%
+  right_join(lh, by = &#39;sciname&#39;)</code></pre>
+<pre><code>## Source: local data frame [1,059 x 8]
+## 
+##                     country                  sciname            commname
+##                       (chr)                    (chr)               (chr)
+## 1                        NA   Notorynchus cepedianus                  NA
+## 2                        NA       Cetorhinus maximus                  NA
+## 3                        NA        Carcharias taurus                  NA
+## 4  United States of America              Alopias spp Thresher sharks nei
+## 5  United States of America         Alopias vulpinus            Thresher
+## 6  United States of America        Isurus oxyrinchus       Shortfin mako
+## 7                        NA    Scyliorhinus canicula                  NA
+## 8  United States of America          Prionace glauca          Blue shark
+## 9                        NA Carcharhinus falciformis                  NA
+## 10                       NA  Carcharhinus brachyurus                  NA
+## ..                      ...                      ...                 ...
+## Variables not shown: spgroupname (chr), vbk (dbl), temp (dbl), maxl (dbl),
+##   agem (dbl)</code></pre>
+<pre class="r"><code># inner join to only keep data for which we have matches in both data sets
+us %&gt;%
+  inner_join(lh, by = &#39;sciname&#39;)</code></pre>
+<pre><code>## Source: local data frame [245 x 8]
+## 
+##                     country                     sciname
+##                       (chr)                       (chr)
+## 1  United States of America      Acanthocybium solandri
+## 2  United States of America                Acanthuridae
+## 3  United States of America                 Alopias spp
+## 4  United States of America            Alopias vulpinus
+## 5  United States of America        Alosa pseudoharengus
+## 6  United States of America           Alosa sapidissima
+## 7  United States of America               Ammodytes spp
+## 8  United States of America              Anadara ovalis
+## 9  United States of America          Anoplopoma fimbria
+## 10 United States of America Archosargus probatocephalus
+## ..                      ...                         ...
+## Variables not shown: commname (chr), spgroupname (chr), vbk (dbl), temp
+##   (dbl), maxl (dbl), agem (dbl)</code></pre>
+<pre class="r"><code># full join to keep all data for both data sets
+us %&gt;%
+  full_join(lh, by = &#39;sciname&#39;)</code></pre>
+<pre><code>## Source: local data frame [1,122 x 8]
+## 
+##                     country                 sciname
+##                       (chr)                   (chr)
+## 1  United States of America  Acanthocybium solandri
+## 2  United States of America            Acanthuridae
+## 3  United States of America Acipenser transmontanus
+## 4  United States of America             Alopias spp
+## 5  United States of America        Alopias vulpinus
+## 6  United States of America    Alosa pseudoharengus
+## 7  United States of America       Alosa sapidissima
+## 8  United States of America           Ammodytes spp
+## 9  United States of America          Anadara ovalis
+## 10 United States of America      Anoplopoma fimbria
+## ..                      ...                     ...
+## Variables not shown: commname (chr), spgroupname (chr), vbk (dbl), temp
+##   (dbl), maxl (dbl), agem (dbl)</code></pre>
+</div>
+</div>
+<div id="analyzing-and-manipulating-data" class="section level2">
+<h2>Analyzing and Manipulating Data</h2>
+<p>Now that we have our cleaned data in a tidy format let’s do some analyses. First, here are a few more simple examples of chaining code to select, filter, and arrange our data to obtain different subsets.</p>
+<pre class="r"><code># Canada&#39;s fisheries from largest to smallest in 2012
+d %&gt;%
+  filter(country==&#39;Canada&#39; &amp; year==2012) %&gt;%
+  select(year,country,commname,catch) %&gt;%
+  arrange(desc(catch))</code></pre>
+<pre><code>## Source: local data frame [90 x 4]
+## 
+##     year country               commname  catch
+##    (dbl)   (chr)                  (chr)  (dbl)
+## 1   2012  Canada         Northern prawn 143350
+## 2   2012  Canada       Atlantic herring 113989
+## 3   2012  Canada             Queen crab  92902
+## 4   2012  Canada       American lobster  71528
+## 5   2012  Canada   American sea scallop  52845
+## 6   2012  Canada     North Pacific hake  46913
+## 7   2012  Canada                Capelin  31778
+## 8   2012  Canada   Stimpson&#39;s surf clam  22005
+## 9   2012  Canada Atlantic redfishes nei  14974
+## 10  2012  Canada      Greenland halibut  13432
+## ..   ...     ...                    ...    ...</code></pre>
+<pre class="r"><code># All fisheries in the Northwest Atlantic with a catch over 1000 MT
+d %&gt;%
+  filter(regionfao==21 &amp; year==2012 &amp; catch&gt;=1000) %&gt;%
+  select(country,commname,regionfao,catch) %&gt;%
+  arrange(desc(catch))</code></pre>
+<pre><code>## Source: local data frame [95 x 4]
+## 
+##                     country             commname regionfao  catch
+##                       (chr)                (chr)     (int)  (dbl)
+## 1  United States of America    Atlantic menhaden        21 224261
+## 2  United States of America American sea scallop        21 214900
+## 3                    Canada       Northern prawn        21 143350
+## 4  United States of America         Ocean quahog        21 131425
+## 5                    Canada     Atlantic herring        21 113989
+## 6                 Greenland       Northern prawn        21 109303
+## 7  United States of America   Atlantic surf clam        21  99004
+## 8                    Canada           Queen crab        21  92902
+## 9  United States of America     Atlantic herring        21  86415
+## 10                   Canada     American lobster        21  71528
+## ..                      ...                  ...       ...    ...</code></pre>
+<pre class="r"><code># Which countries have the 10 largest shark fisheries?
+d %&gt;%
+  filter(spgroupname==&#39;Sharks, rays, chimaeras&#39; &amp; year==2012) %&gt;%
+  select(country,commname,catch) %&gt;%
+  arrange(desc(catch)) %&gt;%
+  slice(1:10)</code></pre>
+<pre><code>## Source: local data frame [10 x 3]
+## 
+##                     country                       commname catch
+##                       (chr)                          (chr) (dbl)
+## 1                     India Sharks, rays, skates, etc. nei 53652
+## 2                 Indonesia  Stingrays, butterfly rays nei 39812
+## 3                     Spain                     Blue shark 27159
+## 4                     India Sharks, rays, skates, etc. nei 22105
+## 5                 Indonesia             Requiem sharks nei 20611
+## 6  Taiwan Province of China Sharks, rays, skates, etc. nei 18465
+## 7                 Argentina    Rays, stingrays, mantas nei 15168
+## 8                     Spain                     Blue shark 14784
+## 9                     Yemen Sharks, rays, skates, etc. nei 13217
+## 10                   Mexico Sharks, rays, skates, etc. nei 12376</code></pre>
+<div id="grouping-summarizing-and-mutating-data" class="section level3">
+<h3>Grouping, Summarizing, and Mutating Data</h3>
+<p>Dplyr uses two main verbs to analyze data, <code>summarize()</code> and <code>mutate()</code>. Summary functions will summarize data two produce a single row of output while mutate functions create a new variable the same length as the input data. For both functions, you first indicate the name of the variable that will be created and then specify the calculation to be performed.</p>
+<ul>
+<li>Example: <code>totalcatch=sum(catch,na.rm=T)</code></li>
+</ul>
+<p><img src="img/sum_mutate.png" alt="" /></p>
+<p>The <code>group_by()</code> function lets you specify the level across which to apply your calculations.</p>
+<ul>
+<li>A key thing to remember is to always <code>ungroup()</code> your data if you intend to perform additional calculations, as grouped data frames can result in incorrect results downstream if performed at different levels.</li>
+</ul>
+<p><img src="img/group_by.png" alt="" /></p>
+<p>Using <code>group_by()</code> and <code>summarize()</code> let’s calculate total global harvest from 1950 to 2012 for several groups of data</p>
+<pre class="r"><code># Total global harvest
+global &lt;- d %&gt;%
+  ungroup() %&gt;%
+  group_by(year) %&gt;%
+  summarize(totalcatch=sum(catch,na.rm=T)) %&gt;%
+  ggplot(aes(x=year,y=totalcatch)) +
+  geom_line()
+global</code></pre>
+<p><img src="index_files/figure-html/unnamed-chunk-15-1.png" title="" alt="" width="672" /></p>
+<pre class="r"><code># Global harvest by country
+cntry &lt;- d %&gt;%
+  group_by(year,country) %&gt;%
+  summarize(totalcatch=sum(catch, na.rm=T)) %&gt;%
+  ungroup() %&gt;% # -- Here&#39;s an example of why you need to ungroup! --
+  arrange(country)
+cntry</code></pre>
+<pre><code>## Source: local data frame [11,156 x 3]
+## 
+##     year country totalcatch
+##    (dbl)   (chr)      (dbl)
+## 1   1950 Albania       1000
+## 2   1951 Albania       1100
+## 3   1952 Albania       1400
+## 4   1953 Albania       1700
+## 5   1954 Albania       1600
+## 6   1955 Albania       1700
+## 7   1956 Albania       1700
+## 8   1957 Albania       1800
+## 9   1958 Albania       1700
+## 10  1959 Albania       1800
+## ..   ...     ...        ...</code></pre>
+<pre class="r"><code># Global harvest by species category
+spcatch &lt;- d %&gt;%
+  group_by(year,spgroupname) %&gt;%
+  summarize(totalcatch=sum(catch, na.rm=T)) %&gt;%
+  ungroup() %&gt;% 
+  arrange(spgroupname)
+spcatch</code></pre>
+<pre><code>## Source: local data frame [1,886 x 3]
+## 
+##     year               spgroupname totalcatch
+##    (dbl)                     (chr)      (dbl)
+## 1   1950 Abalones, winkles, conchs      30509
+## 2   1951 Abalones, winkles, conchs      30964
+## 3   1952 Abalones, winkles, conchs      29989
+## 4   1953 Abalones, winkles, conchs      30524
+## 5   1954 Abalones, winkles, conchs      26698
+## 6   1955 Abalones, winkles, conchs      29160
+## 7   1956 Abalones, winkles, conchs      32553
+## 8   1957 Abalones, winkles, conchs      31148
+## 9   1958 Abalones, winkles, conchs      42446
+## 10  1959 Abalones, winkles, conchs      32584
+## ..   ...                       ...        ...</code></pre>
+<pre class="r"><code># USA harvest by species category over time
+usa &lt;- d %&gt;%
+  filter(country==&#39;United States of America&#39;) %&gt;%
+  group_by(year,country,spgroupname) %&gt;%
+  summarize(totalcatch=sum(catch,na.rm=T)) %&gt;%
+  ungroup() %&gt;%
+  arrange(spgroupname)
+usa</code></pre>
+<pre><code>## Source: local data frame [1,628 x 4]
+## 
+##     year                  country               spgroupname totalcatch
+##    (dbl)                    (chr)                     (chr)      (dbl)
+## 1   1950 United States of America Abalones, winkles, conchs       2499
+## 2   1951 United States of America Abalones, winkles, conchs       2554
+## 3   1952 United States of America Abalones, winkles, conchs       2929
+## 4   1953 United States of America Abalones, winkles, conchs       3164
+## 5   1954 United States of America Abalones, winkles, conchs       2738
+## 6   1955 United States of America Abalones, winkles, conchs       3100
+## 7   1956 United States of America Abalones, winkles, conchs       3193
+## 8   1957 United States of America Abalones, winkles, conchs       3788
+## 9   1958 United States of America Abalones, winkles, conchs       2986
+## 10  1959 United States of America Abalones, winkles, conchs       3024
+## ..   ...                      ...                       ...        ...</code></pre>
+<p>Now let’s use mutate to calculate some additional information for our datasets</p>
+<pre class="r"><code># Calculate what % of global catch each country contributes in each year and for rank each year by that %
+cntry %&gt;%
+  group_by(year) %&gt;%
+  mutate(
+    globalcatch = sum(totalcatch,na.rm=T),
+    globalrank  = dense_rank(totalcatch)) %&gt;% # global catch and cntry rank
+  group_by(year,country) %&gt;% # now we group by a different level before our next calculation
+  mutate(
+    percglobal = 100*(totalcatch/globalcatch)) %&gt;%
+  group_by(country) %&gt;%
+  mutate(
+    ingrouprank = dense_rank(totalcatch))</code></pre>
+<pre><code>## Source: local data frame [11,156 x 7]
+## Groups: country [200]
+## 
+##     year country totalcatch globalcatch globalrank  percglobal ingrouprank
+##    (dbl)   (chr)      (dbl)       (dbl)      (int)       (dbl)       (int)
+## 1   1950 Albania       1000    16780913         13 0.005959151           2
+## 2   1951 Albania       1100    19063253         14 0.005770264           3
+## 3   1952 Albania       1400    20740282         16 0.006750149           5
+## 4   1953 Albania       1700    20844610         18 0.008155586           9
+## 5   1954 Albania       1600    22557865         18 0.007092870           7
+## 6   1955 Albania       1700    23751272         19 0.007157511           9
+## 7   1956 Albania       1700    25437283         18 0.006683104           9
+## 8   1957 Albania       1800    25606086         20 0.007029579          12
+## 9   1958 Albania       1700    26229900         20 0.006481153           9
+## 10  1959 Albania       1800    28577628         21 0.006298633          12
+## ..   ...     ...        ...         ...        ...         ...         ...</code></pre>
+</div>
+<div id="using-dplyr-with-broom-and-ggplot2" class="section level3">
+<h3>Using Dplyr with <code>broom</code> and <code>ggplot2</code></h3>
+<p>One of the best aspects of working with tidy data and <code>dplyr</code> is how easy it makes it to quickly manipulate and plot your data. Property organized, it’s a piece of cake to quickly make summaries and plots of your data without making all kinds of “temporary” files or lines of spaghetti code for plotting. You can also basically eliminate loops from your coding for all situations except that those that require dynamic updating (e.g. population models).</p>
+<p>For this next exercise, we’re going to use <code>tidyr</code>, <code>dplyr</code>, <code>broom</code>, and <code>ggplot2</code> to fit a model, run diagnostics, and plot results.</p>
+<p>It’s 3am. You’ve been chasing the same cryptic error message for two days (<font color = 'red'> <code>Error: towel not found, don't panic!</code></font>). You decide enough is enough: you’re going to pack it in, buy a boat and become a fisherman. The only problem is, years of coding have left you with no knowledge of the outside world besides what R and data can tell you. How are you supposed to know what to fish for, or where to fish? Luckily, you have some data, so you turn to your laptop one last time before hurling it off of a cliff in a ritualistic sacrifice to the sea gods.</p>
+<p>You want to find a fishery to join based on two criteria: high average catch, and low average variability. You might now know these data though, so you want to be able to predict what fishery to join based on geographic and life history traits.</p>
+<p>Our first goals:</p>
+<ol style="list-style-type: decimal">
+<li><p>Generate a unique ID for each fishery</p></li>
+<li><p>Calculate the mean log lifetime catch of each fishery</p></li>
+<li><p>Calculate the coefficient of variation of each fishery</p></li>
+<li><p>Filter out fisheries with short time series</p></li>
+</ol>
+<pre class="r"><code># Prep our data
+dat &lt;- d %&gt;%
+  ungroup() %&gt;% #Often a good idea to ungroup before starting something new
+  mutate(
+    id = paste(country,spcode,regionfao, sep = &#39;_&#39;)) %&gt;% #Generate a unique ID for each fishery
+  group_by(id) %&gt;%
+  mutate(
+    mean_log_catch = mean(logcatch, na.rm = T), 
+    cv_log_catch   = sd(logcatch, na.rm = T)/mean(logcatch, na.rm = T), 
+    length_catch   = sum(is.na(logcatch) == F &amp; logcatch &gt;0)) %&gt;% # we want to keep some of the other data as well
+  filter(
+    year == max(year) &amp; length_catch &gt; 10, 
+    is.finite(mean_log_catch) == T,
+    cv_log_catch &gt;0) %&gt;% # We don&#39;t want repeated entries, so let&#39;s just grab one random year
+  select(-year, -catch, -logcatch)
+
+# Always plot!
+ggplot(dat, aes(mean_log_catch,cv_log_catch)) + 
+  geom_point()</code></pre>
+<p><img src="index_files/figure-html/unnamed-chunk-17-1.png" title="" alt="" width="672" /></p>
+<p>OK, we see we’re onto something here: there’s clearly a relationship between average catch and the CV of the catch. We want to build a model that predicts that. Let’s create a composite score of the mean log catch and the inverse of the CV. We’re going to scale the log catches by the maximum log catch, and the CV by the the maximum of 1/CV. We also want to add in our nice life history data</p>
+<pre class="r"><code>regdat &lt;-  dat %&gt;%
+  ungroup() %&gt;% #we want global statistics now
+  mutate(
+    scaled_ml_catch = mean_log_catch/max(mean_log_catch),
+    scaled_cv_catch =  (cv_log_catch/min(cv_log_catch))^-1, 
+    fishiness       = scaled_ml_catch + scaled_cv_catch) %&gt;%
+  left_join(lh, by = &#39;sciname&#39;)
+
+regplot &lt;- regdat %&gt;% #great thing about ggplot is the ability to save as an object and use and modify later
+  ggplot(aes(mean_log_catch,cv_log_catch, fill = fishiness)) + 
+  geom_point(shape = 21) + 
+  scale_fill_gradient(low = &#39;red&#39;,high = &#39;green&#39;)
+
+regplot # grea</code></pre>
+<p><img src="index_files/figure-html/unnamed-chunk-18-1.png" title="" alt="" width="672" /></p>
+<p>Now we’re getting somewhere! Now, lets run a regression using life history and geographic variables to try and predict the quality of fishing.</p>
+<pre class="r"><code>reg_vars &lt;- c(&#39;regionfao&#39;, &#39;spgroupname&#39;, &#39;vbk&#39;,&#39;maxl&#39;,&#39;temp&#39;) #specify variables you want
+
+class(regdat$regionfao) #whoops, it things FAO region is an integer, we want a factor</code></pre>
+<pre><code>## [1] &quot;integer&quot;</code></pre>
+<pre class="r"><code>filtered_dat &lt;- regdat %&gt;%
+  ungroup() %&gt;%
+  mutate(has_all = apply(is.na(regdat[,reg_vars]) == F, 1,all)) %&gt;%
+  filter(has_all == T) %&gt;%
+  mutate(
+    regionfao   = as.factor(regionfao),
+    spgroupname = as.factor(spgroupname))
+
+reg_fmla &lt;- as.formula(paste(&#39;fishiness ~&#39;,paste(reg_vars, collapse = &#39;+&#39;), sep = &#39;&#39;)) #create regression formula
+
+fish_model &lt;- lm(reg_fmla, data = filtered_dat) #run a linear regression
+summary(fish_model)</code></pre>
+<pre><code>## 
+## Call:
+## lm(formula = reg_fmla, data = filtered_dat)
+## 
+## Residuals:
+##      Min       1Q   Median       3Q      Max 
+## -0.64362 -0.12021  0.00152  0.10966  0.86657 
+## 
+## Coefficients:
+##                                              Estimate Std. Error t value
+## (Intercept)                                 0.6601333  0.0281170  23.478
+## regionfao27                                 0.0515901  0.0217864   2.368
+## regionfao31                                 0.0011936  0.0254237   0.047
+## regionfao34                                 0.0544856  0.0240581   2.265
+## regionfao37                                -0.0121513  0.0298237  -0.407
+## regionfao41                                 0.0299216  0.0277397   1.079
+## regionfao47                                 0.0354956  0.0271043   1.310
+## regionfao48                                 0.1044720  0.1379318   0.757
+## regionfao51                                 0.1217675  0.0251469   4.842
+## regionfao57                                 0.0971409  0.0272346   3.567
+## regionfao58                                 0.2243586  0.1842908   1.217
+## regionfao61                                 0.3047966  0.0334511   9.112
+## regionfao67                                 0.0707998  0.0388540   1.822
+## regionfao71                                 0.1675909  0.0258878   6.474
+## regionfao77                                 0.1091043  0.0261506   4.172
+## regionfao81                                 0.0776129  0.0310813   2.497
+## regionfao87                                 0.1398581  0.0278864   5.015
+## spgroupnameFlounders, halibuts, soles      -0.1839127  0.0305781  -6.015
+## spgroupnameHerrings, sardines, anchovies    0.0086945  0.0338028   0.257
+## spgroupnameMiscellaneous coastal fishes    -0.2994434  0.0644592  -4.645
+## spgroupnameMiscellaneous demersal fishes   -0.1503954  0.0399963  -3.760
+## spgroupnameMiscellaneous diadromous fishes -0.3822979  0.0661284  -5.781
+## spgroupnameMiscellaneous pelagic fishes    -0.2040183  0.0320385  -6.368
+## spgroupnameSalmons, trouts, smelts         -0.2106036  0.0373202  -5.643
+## spgroupnameSharks, rays, chimaeras         -0.2216522  0.0305082  -7.265
+## spgroupnameSturgeons, paddlefishes         -0.4162103  0.1764759  -2.358
+## spgroupnameTunas, bonitos, billfishes      -0.2539178  0.0303525  -8.366
+## vbk                                        -0.0551644  0.0221175  -2.494
+## maxl                                       -0.0003563  0.0000372  -9.578
+## temp                                        0.0014007  0.0015005   0.933
+##                                            Pr(&gt;|t|)    
+## (Intercept)                                 &lt; 2e-16 ***
+## regionfao27                                0.018000 *  
+## regionfao31                                0.962561    
+## regionfao34                                0.023657 *  
+## regionfao37                                0.683740    
+## regionfao41                                0.280898    
+## regionfao47                                0.190517    
+## regionfao48                                0.448908    
+## regionfao51                                1.40e-06 ***
+## regionfao57                                0.000372 ***
+## regionfao58                                0.223620    
+## regionfao61                                 &lt; 2e-16 ***
+## regionfao67                                0.068606 .  
+## regionfao71                                1.26e-10 ***
+## regionfao77                                3.17e-05 ***
+## regionfao81                                0.012619 *  
+## regionfao87                                5.87e-07 ***
+## spgroupnameFlounders, halibuts, soles      2.22e-09 ***
+## spgroupnameHerrings, sardines, anchovies   0.797047    
+## spgroupnameMiscellaneous coastal fishes    3.66e-06 ***
+## spgroupnameMiscellaneous demersal fishes   0.000176 ***
+## spgroupnameMiscellaneous diadromous fishes 8.86e-09 ***
+## spgroupnameMiscellaneous pelagic fishes    2.48e-10 ***
+## spgroupnameSalmons, trouts, smelts         1.96e-08 ***
+## spgroupnameSharks, rays, chimaeras         5.72e-13 ***
+## spgroupnameSturgeons, paddlefishes         0.018467 *  
+## spgroupnameTunas, bonitos, billfishes       &lt; 2e-16 ***
+## vbk                                        0.012723 *  
+## maxl                                        &lt; 2e-16 ***
+## temp                                       0.350703    
+## ---
+## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1
+## 
+## Residual standard error: 0.1728 on 1649 degrees of freedom
+## Multiple R-squared:   0.28,  Adjusted R-squared:  0.2674 
+## F-statistic: 22.12 on 29 and 1649 DF,  p-value: &lt; 2.2e-16</code></pre>
+<p>Now we’ve got a model! we’re close to being able to use data to predict where we’ll start our fishing operation. But, while we know nothing about fishing, we are good statisticians, and we know we should look at our regression before using it to make a big life decision. This is where <code>broom</code> comes in. R has all kinds of great functions, like <code>summary()</code> to look at regressions. But, they can be a little ad hoc, and difficult to manipulate. <code>broom</code> helps us tidy up our regression data. First, suppose that we want a better way to look at summary statistics from the regression. The <code>glance()</code> function from the <code>broom</code> package extracts important summary statistics from the model, like the <em>R<sup>2</sup></em>, the AIC, and the BIC.</p>
+<pre class="r"><code>library(broom)
+reg_summary &lt;- glance(fish_model)
+
+reg_summary</code></pre>
+<pre><code>##   r.squared adj.r.squared     sigma statistic      p.value df   logLik
+## 1 0.2800327     0.2673711 0.1728461  22.11661 9.261001e-97 30 579.9767
+##         AIC       BIC deviance df.residual
+## 1 -1097.953 -929.7488 49.26515        1649</code></pre>
+<p>Unfortunately, our model is pretty poor; it only explains ~20% of the variation in the <code>fishiness</code> variable, but hopefully it’s better than guessing. Let’s dig into this model a bit more. We’re going to use the <code>tidy()</code> function from the <code>broom</code> package to provide neat summaries of the model coefficients.</p>
+<pre class="r"><code>tidy_model &lt;- tidy(fish_model)
+
+tidy_model$variable&lt;- as.factor(tidy_model$term) #convert terms to factors
+
+tidy_model$variable &lt;- reorder(tidy_model$variable, tidy_model$p.value) #sort variables by pvalue
+
+tidy_model$short_pval&lt;- pmin(tidy_model$p.value,0.2) #create abbreviated version
+
+regression_plot &lt;- (
+  ggplot(data=tidy_model,aes(x=variable,y=estimate,fill=short_pval)) +
+    geom_bar(position=&#39;dodge&#39;,stat=&#39;identity&#39;,color=&#39;black&#39;) +
+    scale_fill_gradient2(
+      high=&#39;black&#39;,mid=&#39;gray99&#39;, low=&#39;red&#39;, midpoint=0.1,
+      breaks=c(0.05,0.1,0.15,0.2), labels=c(&#39;0.05&#39;,&#39;0.10&#39;,&#39;0.15&#39;,&#39;&gt;0.20&#39;),
+      name=&#39;P-Value&#39;, guide=guide_colorbar(reverse=T))
+  +theme(axis.text.x=element_text(angle=45,hjust=0.9,vjust=0.9)) +
+    geom_errorbar(mapping=aes(ymin=estimate-1.96*std.error,ymax=estimate+1.96*std.error)) +
+    xlab(&#39;Variable&#39;) +
+    ylab(paste(&#39;Marginal Effect on &#39;,names(fish_model$model)[1],sep=&#39;&#39;)) + 
+    coord_flip())
+
+regression_plot</code></pre>
+<p><img src="index_files/figure-html/unnamed-chunk-21-1.png" title="" alt="" width="672" /></p>
+<p>So, we can now see that most of the significant terms are region specific, and the life history data doesn’t give us a whole lot of information on where we should start fishing. So far, the model is saying go fish in China, and maybe avoid salmons, halibuts, and tunas.</p>
+<p>Before we charge off and use these results though to decide where we’re starting our new life, we’re now going to use the <code>augment()</code> function in the <code>broom</code> package to help us run some diagnostics on the regression. The <code>augment</code> function takes our original data passed to the regression, and adds all kinds of things, like the values predicted by the model and the residuals. This makes it very useful for regression diagnostics. First off, we might want to check whether our errors are actually normally distributed</p>
+<pre class="r"><code>auged_reg &lt;- augment(fish_model)
+
+obs_v_pred &lt;- auged_reg %&gt;%
+  ggplot(aes(fishiness, .fitted)) + 
+  geom_point(shape = 21, size = 4, alpha = 0.6, fill = &#39;steelblue4&#39;) + 
+  geom_abline(aes(slope=1, intercept = 0)) + 
+  xlab(&#39;ovbserved&#39;) + 
+  ylab(&#39;predicted&#39;) + 
+  geom_label(aes(0.25,0.7), label = paste(&#39;R2 = &#39;, round(reg_summary$r.squared,2), sep = &#39;&#39;))
+obs_v_pred</code></pre>
+<p><img src="index_files/figure-html/unnamed-chunk-22-1.png" title="" alt="" width="672" /></p>
+<pre class="r"><code>qq_plot &lt;- auged_reg %&gt;% #create quantile-quantile plot
+  ggplot(aes(sample = .resid)) +
+  stat_qq(shape = 21, size = 4, alpha = 0.6, fill = &#39;steelblue4&#39;) +
+  xlab(&#39;Theoretical&#39;) +
+  ylab(&#39;Sample&#39;)
+qq_plot</code></pre>
+<p><img src="index_files/figure-html/unnamed-chunk-22-2.png" title="" alt="" width="672" /></p>
+<p>We see that our data are in fact normally distributed, that’s good! Let’s check for heteroskedasticity and model misspecification.</p>
+<pre class="r"><code>hetsk_plot &lt;- auged_reg %&gt;% #plot fitted vs residuals
+  ggplot(aes(.fitted, .resid)) +
+  geom_point(shape = 21, size = 4, alpha = 0.6, fill = &#39;steelblue4&#39;) +
+  geom_hline(aes(yintercept = 0)) + 
+  xlab(&#39;Predicted&#39;) +
+  ylab(&#39;Residuals&#39;)
+hetsk_plot</code></pre>
+<p><img src="index_files/figure-html/unnamed-chunk-23-1.png" title="" alt="" width="672" /></p>
+<p>Looks a little iffy, we’ve got some heteroskedasticity going on. Let’s try and see where it is. The great thing about <code>broom</code> is that it makes it really easy to manipulate data and plot diagnostics based on the original data.</p>
+<pre class="r"><code>hetsk_plot2 &lt;- auged_reg %&gt;% 
+  ggplot(aes(.fitted, .resid, fill = spgroupname)) +
+  geom_point(shape = 21, size = 4, alpha = 0.6) +
+  geom_hline(aes(yintercept = 0)) + 
+  xlab(&#39;Predicted&#39;) +
+  ylab(&#39;Residuals&#39;)
+hetsk_plot2</code></pre>
+<p><img src="index_files/figure-html/unnamed-chunk-24-1.png" title="" alt="" width="672" /></p>
+<p>So, we see here that the culprit are the herrings and salmons. That tells us to be a little cautious in our predictive ability and estimated errors based on this model, and maybe we need to do a better job of clustering our errors. Let’s look at things another way. We saw from the coefficient plot that the region effects are the most significant in the model. How confident are we in those?</p>
+<pre class="r"><code>regional_bias &lt;- auged_reg %&gt;% #Check residuals by group
+  ggplot(aes(regionfao,.resid)) + 
+  geom_boxplot(fill = &#39;steelblue4&#39;) + 
+  geom_hline(aes(yintercept = 0)) + 
+  xlab(&#39;FAO Region&#39;) + 
+  ylab(&#39;Residuals&#39;)
+regional_bias</code></pre>
+<p><img src="index_files/figure-html/unnamed-chunk-25-1.png" title="" alt="" width="672" /></p>
+<pre class="r"><code>species_bias &lt;- auged_reg %&gt;%
+  ggplot(aes(spgroupname,.resid)) + 
+  geom_boxplot(fill = &#39;steelblue4&#39;) + 
+  geom_hline(aes(yintercept = 0)) + 
+  xlab(&#39;Species Category&#39;) + 
+  ylab(&#39;Residuals&#39;) + 
+  coord_flip()
+species_bias</code></pre>
+<p><img src="index_files/figure-html/unnamed-chunk-25-2.png" title="" alt="" width="672" /></p>
+<p>All in all then, we’ve got some heteroskedasticity that makes us a little suspicious of our standard errors, but no major biases in our estimation. Our life choice model works! Let’s move to China and fish whatever, the model says it doesn’t matter.</p>
+</div>
+<div id="in-defense-of-plyr" class="section level3">
+<h3>In defense of <code>plyr</code></h3>
+<p>One quick note. <code>dplyr</code> has taken over for a lot of the things we used to use <code>plyr</code> for. But, <code>plyr</code> is still useful for manipulating other types of objects instead of data frames. Specifically, I use <code>plyr</code> to convert lists and arrays to data frames.</p>
+<p>Sometimes its useful to use lists. Suppose that I have a function that I want to evaluate a bunch of times. Loops can be cumbersome for a variety of reasons. Let’s write a function and apply it over a vector instead.</p>
+<pre class="r"><code>foo &lt;- function(x){ #random function
+  y &lt;- x^2
+  return(y)
+}
+
+food &lt;- lapply(1:100,foo) #this can be more efficient and simpler than loops</code></pre>
+<p>Now, we’ve applied our function over 100 values. But, they’re stuck in list form. <code>plyr</code> to the rescue! So long as each element in every list has the same dimensions, <code>ldply</code> will “smash” the list into a data frame</p>
+<pre class="r"><code>plyr::ldply(food) %&gt;% head</code></pre>
+<pre><code>##   V1
+## 1  1
+## 2  4
+## 3  9
+## 4 16
+## 5 25
+## 6 36</code></pre>
+<pre class="r"><code># OR without plyr
+food %&gt;% lapply(as.data.frame) %&gt;% rbind_all() %&gt;% head</code></pre>
+<pre><code>## Source: local data frame [6 x 1]
+## 
+##   X[[i]]
+##    (dbl)
+## 1      1
+## 2      4
+## 3      9
+## 4     16
+## 5     25
+## 6     36</code></pre>
+<p>The syntax is simple. <code>ldply</code> converts lists to data frames. <code>adply</code> converts arrays to data frames. You get the idea. Huge warning here. <strong>Make sure</strong> you load the <code>plyr</code> library <strong>before</strong> <code>dplyr</code>. Otherwise, bad bad things can happen. R will even throw a warning if you do it the other way around. Or, more simply, instead of loading the library, just use <code>plyr::ldply</code>. This loads that function for that instance, without actually loading into the environment and masking other things.</p>
+</div>
+<div id="a-quick-warning-on-speed" class="section level3">
+<h3>A quick warning on speed</h3>
+<p>So far, we’ve been preaching the <code>dplyr</code> gospel pretty hard. All in all, it makes code faster, more efficient, and much easier to read. But, there are times when its best to keep it simple, especially where speed is critical. This is less <code>dplyr</code>’s fault, than some issues with data frames themselves.</p>
+<p>We are going to compare two functions that do the same thing, one using dplyr and data frames and one that uses more basic R functions. The goal is a function that calculates the mean length of catch history in an fao region</p>
+<pre class="r"><code>dplyr_fun &lt;- function(region,dat){
+  dat %&gt;%
+    filter(regionfao == region) %&gt;%
+    summarise(mean_length = mean(length_catch))
+}
+
+basic_fun &lt;- function(region,dat){
+  mean(as.numeric(dat[dat[,&#39;regionfao&#39;] == region,&#39;length_catch&#39;]))
+}
+
+regions &lt;- rep(unique(as.character(regdat$regionfao)), 100) #thing to test
+
+system.time({ #time the dplyr version
+  a &lt;- lapply(regions, dplyr_fun, dat = regdat)
+})</code></pre>
+<pre><code>##    user  system elapsed 
+##   5.371   0.030   5.420</code></pre>
+<pre class="r"><code>system.time({ #time the basic version
+  b &lt;- lapply(regions, basic_fun, dat = as.matrix(regdat))
+})</code></pre>
+<pre><code>##    user  system elapsed 
+##   0.749   0.117   0.868</code></pre>
+<pre class="r"><code>all(plyr::ldply(a)$V1 == plyr::ldply(b)$V1) #check and make sure they do the same thing</code></pre>
+<pre><code>## [1] TRUE</code></pre>
+<p>The <code>dplyr</code> version of the function takes nearly 7 times as long as the same function in basic notation! The difference between .45 and 3.1 seconds doesn’t matter much in most cases, but if you’re doing huge numbers of simulations, say in an MCMC, this starts to add up. This can be the difference between a model running a day and a few hours.</p>
+<p>This time sink doesn’t always hold true, <code>dplyr</code> will often be faster than bunches of nested loops, but when speed is a priority, it’s worth checking to see using matrices instead of data frames and <code>dplyr</code> will save you some serious time.</p>
+</div>
+</div>
+<div id="advanced-dplyr-applications" class="section level2">
+<h2>Advanced Dplyr Applications</h2>
+<div id="underscore-functions" class="section level3">
+<h3>Underscore Functions</h3>
+<p>Often, when writing functions with dplyr we may want to be able to specify different grouping variables. But wait, dplyr arguments use unquoted variable names! Have no fear, underscore is here!</p>
+<p>Check out the following two functions:</p>
+<pre class="r"><code># function using standard dplyr functions
+fun1&lt;-function(x,gpvar1,gpvar2,gpvar3){
+  y&lt;-x %&gt;%
+    group_by(gpvar1) %&gt;%
+    mutate(
+      globalcatch = sum(totalcatch,na.rm=T),
+      globalrank  = dense_rank(totalcatch)) %&gt;% # global catch and cntry rank
+    group_by(gpvar2) %&gt;% # now we group by a different level before our next calculation
+    mutate(
+      percglobal = 100*(totalcatch/globalcatch)) %&gt;%
+    group_by(gpvar3) %&gt;%
+    mutate(
+      ingrouprank = dense_rank(totalcatch))
+  return(y)
+}
+
+fun1(spcatch, gpvar1 = year, gpvar2 = c(year,country), gpvar3 = country) # !!!!! THIS WILL NOT WORK !!!!!
+
+# function using underscores
+fun1&lt;-function(x,gpvar1,gpvar2,gpvar3){
+  y&lt;-x %&gt;%
+    group_by_(gpvar1) %&gt;%
+    mutate(
+      globalcatch = sum(totalcatch,na.rm=T),
+      globalrank  = dense_rank(totalcatch)) %&gt;% 
+    group_by_(gpvar2) %&gt;% 
+    mutate(
+      percglobal = 100*(totalcatch/globalcatch)) %&gt;%
+    group_by_(gpvar3) %&gt;%
+    mutate(
+      ingrouprank = dense_rank(desc(totalcatch)))
+  return(y)
+}  
+
+# apply function to species category and country datasets
+spcatch&lt;-fun1(spcatch,gpvar1 = c(&#39;year&#39;), gpvar2 = c(&#39;year&#39;,&#39;spgroupname&#39;), gpvar3 = c(&#39;spgroupname&#39;)) 
+cntry&lt;-fun1(cntry,gpvar1 = c(&#39;year&#39;), gpvar2 = c(&#39;year&#39;,&#39;country&#39;), gpvar3 = c(&#39;country&#39;))   </code></pre>
+</div>
+<div id="using-dplyr-to-query-external-databases" class="section level3">
+<h3>Using Dplyr to Query External Databases</h3>
+<p>Need to setup Google account first, per <a href="http://zevross.com/blog/2015/01/13/a-new-data-processing-workflow-for-r-dplyr-magrittr-tidyr-ggplot2/">A new data processing workflow for R: dplyr, magrittr, tidyr, ggplot2 | Technical Tidbits From Spatial Analysis &amp; Data Science</a>.</p>
+<pre class="r"><code># library(dplyr)
+library(bigrquery) # install.packages(&#39;bigrquery&#39;)
+sql&lt;-&quot;select * from [publicdata:samples.shakespeare]&quot;
+shakespeare &lt;-query_exec(sql, project =&quot;test-bigquery-1243&quot;,max_pages=Inf)</code></pre>
+</div>
+</div>
+<div id="further-resources" class="section level2">
+<h2>Further Resources</h2>
+<ul>
+<li><a href="http://ucsb-bren.github.io/refs/cheatsheets/data-wrangling-cheatsheet.pdf">Data wrangling cheatsheet (<code>dplyr</code>,<code>tidyr</code>)</a></li>
+<li><a href="https://www.rstudio.com/resources/webinars/data-wrangling-with-r-and-rstudio/">Data wrangling with R and RStudio</a>
+<ul>
+<li><a href="http://ucsb-bren.github.io/env-info/wk03_dplyr/wrangling-webinar.pdf">slides</a></li>
+</ul></li>
+<li><a href="https://cran.rstudio.com/web/packages/dplyr/vignettes/introduction.html">dplyr vignette: Introduction to dplyr</a>
+<ul>
+<li><a href="https://cran.rstudio.com/web/packages/dplyr/vignettes/two-table.html">Two-table verbs</a></li>
+<li><a href="https://cran.rstudio.com/web/packages/dplyr/vignettes/window-functions.html">Window functions and grouped mutate/filter</a></li>
+<li><a href="https://cran.rstudio.com/web/packages/dplyr/vignettes/databases.html">Databases</a></li>
+<li><a href="https://cran.rstudio.com/web/packages/dplyr/vignettes/nse.html">Non-standard evaluation</a></li>
+</ul></li>
+<li><a href="https://cran.r-project.org/web/packages/tidyr/vignettes/tidy-data.html">tidyr vignette: Tidy data</a></li>
+<li><a href="https://rpubs.com/justmarkham/dplyr-tutorial">Introduction to dplyr for Faster Data Manipulation in R</a></li>
+<li><a href="http://ucsb-bren.github.io/env-info/">Environmental Informatics | ucsb-bren/env-info</a></li>
+<li>bigrquery tutorials:
+<ul>
+<li><a href="http://zevross.com/blog/2015/01/13/a-new-data-processing-workflow-for-r-dplyr-magrittr-tidyr-ggplot2/">A new data processing workflow for R: dplyr, magrittr, tidyr, ggplot2 | Technical Tidbits From Spatial Analysis &amp; Data Science</a> (newer)</li>
+<li><a href="http://dtkaplan.github.io/CVC/Data/Birthdays/Birthdays.html">Fetching BigQuery Data</a></li>
+</ul></li>
+</ul>
+<div id="example-analyses" class="section level4">
+<h4>Example Analyses</h4>
+<ul>
+<li><a href="http://rstudio-pubs-static.s3.amazonaws.com/25871_1ffdd88781bd4e6194d93fd327a25659.html">NOAA Storm Data - a Brief Analysis of Impact on Health and Economy</a></li>
+<li><a href="http://rpubs.com/dogle/31773">dplyr example with fish data</a> (more on <a href="https://fishr.wordpress.com/ifar/">Introductory Fisheries Analysis with R | fishR</a>)</li>
+<li><a href="https://ropensci.org/blog/2014/03/13/rnoaa/">rnoaa - Access to NOAA National Climatic Data Center data</a></li>
+</ul>
+</div>
+</div>
+
+  </div> <!--span-9-->
+</div> <!--row-fluid-->
+
+<style type="text/css">
+.main-container {
+  max-width: none;
+}
+</style>
+
+<script>
+$(function() {
+    var toc = $("#toc").tocify({
+      selectors: "h2,h3",
+      theme: "bootstrap3",
+      context: '.main-content',
+      hashGenerator: 'pretty',
+      showAndHide: false
+    }).data("toc-tocify");
+    $(".optionName").popover({ trigger: "hover" });
+});
+</script>
+
+<div style="color:gray; text-align: right;" >
+  <span class="octicon octicon-repo-forked"></span> <b>Fork</b> me at <a href="http://github.com/ucsb-bren/env-info">github.com/<b>ucsb-bren/env-info</b></a>
+</div>
+
+
+
+</div>
+
+<script>
+
+// add bootstrap table styles to pandoc tables
+$(document).ready(function () {
+  $('tr.header').parent('thead').parent('table').addClass('table table-condensed');
+});
+
+</script>
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>
