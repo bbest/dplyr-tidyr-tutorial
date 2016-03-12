@@ -2004,12 +2004,12 @@ system.time({ #time the dplyr version
   a &lt;- lapply(regions, dplyr_fun, dat = regdat)
 })</code></pre>
 <pre><code>##    user  system elapsed 
-##   5.371   0.030   5.420</code></pre>
+##   5.278   0.038   5.339</code></pre>
 <pre class="r"><code>system.time({ #time the basic version
   b &lt;- lapply(regions, basic_fun, dat = as.matrix(regdat))
 })</code></pre>
 <pre><code>##    user  system elapsed 
-##   0.749   0.117   0.868</code></pre>
+##   0.759   0.125   0.886</code></pre>
 <pre class="r"><code>all(plyr::ldply(a)$V1 == plyr::ldply(b)$V1) #check and make sure they do the same thing</code></pre>
 <pre><code>## [1] TRUE</code></pre>
 <p>The <code>dplyr</code> version of the function takes nearly 7 times as long as the same function in basic notation! The difference between .45 and 3.1 seconds doesn’t matter much in most cases, but if you’re doing huge numbers of simulations, say in an MCMC, this starts to add up. This can be the difference between a model running a day and a few hours.</p>
